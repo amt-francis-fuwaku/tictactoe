@@ -27,7 +27,7 @@
                     <img
                         id="mask_turn"
                         class="player_mask"
-                        src="./assets/icon-x-gray.svg"
+                        src="./assets/icon-x-gray-1.svg"
                         alt="x and o mask"
                     />
                     <p class="next-player">TURN</p>
@@ -71,16 +71,16 @@
                         <div class="display_player">O</div>
                         <div class="display_player" id="opponent">(P1)</div>
                     </div>
-                    <div class="total-wins" id="opponent_socre">0</div>
+                    <div class="total-wins" id="opponent_score">0</div>
                 </div>
             </div>
         </main>
-        <div id="modal_container" class="pop_container hidden">
+        <div id="win_modal" class="pop_container hidden">
             <div class="popup_message">
-                <p id="player_winner" class="winner_text"></p>
-                <div class="winner_message" id="winner_modal">
+                <p id="winner" class="winner_text"></p>
+                <div class="winner_message" id="modal">
                     <img class="winner_mask hidden" id="winning_player_mask" />
-                    <p id="takes_round" class="round_text"></p>
+                    <p id="takes" class="round_text"></p>
                     <p class="tie_message" id="tie"></p>
                 </div>
                 <div class="cta_buttons">
@@ -96,6 +96,20 @@
             </div>
         </div>
 
-        <script src="" type="module"></script>
+        <div id="restart_modal" class="pop_container hidden">
+            <div class="popup_message">
+                <p class="text">RESTART GAME?</p>
+                <div class="cta_buttons">
+                    <button class="cancel_button" id="cancel">
+                        NO, CANCEL
+                    </button>
+
+                    <button class="restart_button" id="restart">
+                        YES, RESTART
+                    </button>
+                </div>
+            </div>
+        </div>
+        <script src="app_multi_player.js" type="module"></script>
     </body>
 </html>
