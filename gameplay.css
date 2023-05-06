@@ -326,6 +326,53 @@ body {
     border-radius: 10px;
 }
 
+.text {
+    position: absolute;
+    top: 40px;
+    font-family: "Outfit";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 50px;
+    text-align: center;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #a8bfc9;
+}
+
+.cancel_button {
+    cursor: pointer;
+    font-family: "Outfit";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 1px;
+    color: #1a2a33;
+    width: 139px;
+    height: 52px;
+    background: #a8bfc9;
+    box-shadow: inset 0px -4px 0px #6b8997;
+    border-radius: 10px;
+}
+
+.restart_button {
+    cursor: pointer;
+    font-family: "Outfit";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 1px;
+    background: #f2b137;
+    box-shadow: inset 0px -4px 0px #cc8b13;
+    border-radius: 10px;
+    width: 151px;
+    height: 52px;
+}
+
 /* pop message end*/
 
 /*VERY SMALL SCREEN*/
