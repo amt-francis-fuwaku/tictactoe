@@ -10,28 +10,27 @@ const [mask2, name2, move2] = player2;
 let gamePlayInterfaceState = [];
 
 //set current player according to chosen mask
-let currentPlayer = player1;
+let currentPlayer = name2 || name1 ? player2 : player1;
 
 //save game data
 let saveData;
 
 function getPlayerMove(boxID) {
-    const play = currentPlayer[2];
     const isOddBox = Number(boxID) % 2 !== 0;
     const isEvenBox = !isOddBox;
+    // const play = currentPlayer[2];
     if (
         (currentPlayer === player1 && isOddBox) ||
         (currentPlayer === player2 && isEvenBox)
     ) {
-        play.push(Number(boxID));
-    }
-    if (
+        currentPlayer[2].push(parseInt(boxID));
+    } else if (
         (currentPlayer === player1 && isEvenBox) ||
         (currentPlayer === player2 && isOddBox)
     ) {
-        play.push(Number(boxID));
+        currentPlayer[2].push(parseInt(boxID));
     }
-    return play;
+    return currentPlayer[2];
 }
 
 const checkGameStatus = (boxID, moves) => {
