@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="./assets/favicon-32x32.png"
+        />
+        <link rel="stylesheet" href="gameplay.css" />
+
+        <title>Frontend Mentor | Tic Tac Toe</title>
+        <!-- <script src="game_script.js" defer></script> -->
+    </head>
+    <body>
+        <main>
+            <!--displays active game information-->
+            <section class="game-menu">
+                <div class="game-icons">
+                    <img class="mask" src="./assets/icon-x.svg" alt="x mask" />
+                    <img class="mask" src="./assets/icon-o.svg" alt="o mask" />
+                </div>
+                <div class="player-turn" id="nexticon">
+                    <img
+                        id="mask_turn"
+                        class="player_mask"
+                        src="./assets/icon-x-gray.svg"
+                        alt="x and o mask"
+                    />
+                    <p class="next-player">TURN</p>
+                </div>
+                <button class="reset-button" id="reset">
+                    <img
+                        src="./assets/icon-restart.svg"
+                        alt="reset icon "
+                        class="mask"
+                    />
+                </button>
+            </section>
+            <!--the main section  for displaying the game-->
+            <section id="gameboard-container" id="gameboard">
+                <div id="1" class="grid-box" data-cell></div>
+                <div id="2" class="grid-box" data-cell></div>
+                <div id="3" class="grid-box" data-cell></div>
+                <div id="4" class="grid-box" data-cell></div>
+                <div id="5" class="grid-box" data-cell></div>
+                <div id="6" class="grid-box" data-cell></div>
+                <div id="7" class="grid-box" data-cell></div>
+                <div id="8" class="grid-box" data-cell></div>
+                <div id="9" class="grid-box" data-cell></div>
+            </section>
+
+            <!--game result information-->
+            <div class="game-result" id="result">
+                <div class="info-box light_blue" id="blue">
+                    <div class="horizontal">
+                        <div class="display_player">X</div>
+                        <div class="display_player" id="you">(P2)</div>
+                    </div>
+                    <div class="total-wins" id="you_score">0</div>
+                </div>
+                <div class="info-box gray">
+                    <div class="ties">TIES</div>
+                    <div class="total-wins" id="tie_count">0</div>
+                </div>
+                <div class="info-box light_yellow" id="yelow">
+                    <div class="horizontal">
+                        <div class="display_player">O</div>
+                        <div class="display_player" id="opponent">(P1)</div>
+                    </div>
+                    <div class="total-wins" id="opponent_socre">0</div>
+                </div>
+            </div>
+        </main>
+        <div id="modal_container" class="pop_container hidden">
+            <div class="popup_message">
+                <p id="player_winner" class="winner_text"></p>
+                <div class="winner_message" id="winner_modal">
+                    <img class="winner_mask hidden" id="winning_player_mask" />
+                    <p id="takes_round" class="round_text"></p>
+                    <p class="tie_message" id="tie"></p>
+                </div>
+                <div class="cta_buttons">
+                    <a href="./index.html">
+                        <button class="quit_button" id="quitButton">
+                            QUIT
+                        </button></a
+                    >
+                    <button class="next_round_button" id="nextRoundButton">
+                        NEXT ROUND
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script src="" type="module"></script>
+    </body>
+</html>
