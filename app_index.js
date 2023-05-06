@@ -9,8 +9,10 @@ const oMask = document.getElementById("o_mask_select");
 //pre-defined css classes that holds  each svg || location gameplay.css
 // player x
 // player o
-const Mask_O = ["circle", "playerO"];
-const Mask_X = ["x", "playerX"];
+let oMovement = [];
+let xMovement = [];
+const Mask_O = ["circle", "playerO", oMovement];
+const Mask_X = ["x", "playerX", xMovement];
 
 //initial value
 localStorage.setItem("user", JSON.stringify(Mask_O));
