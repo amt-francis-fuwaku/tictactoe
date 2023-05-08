@@ -10,7 +10,15 @@ const [mask2, name2, move2] = player2;
 let gamePlayInterfaceState = [];
 
 //set current player according to chosen mask
-let currentPlayer = name2 || name1 ? player2 : player1;
+let currentPlayer = name1 ? player2 : player1;
+
+//set score text base on the chosen player
+if (currentPlayer[1] == "playerO" || currentPlayer[1] == "playerX") {
+    currentPlayer = player2;
+    document.getElementById("you").textContent = "(P1)";
+    document.getElementById("opponent").textContent = "(P2)";
+} else if (currentPlayer[1] == "playerO" || currentPlayer[1] == "playerX") {
+}
 
 //save game data
 let saveData;
@@ -96,12 +104,6 @@ let p1Score = Number(document.getElementById("you_score").textContent);
 let p2Score = Number(document.getElementById("opponent_score").textContent);
 let tieCount = Number(document.getElementById("tie_count").textContent);
 
-//set score text base on the chosen player
-if (currentPlayer[1] == "playerO") {
-    document.getElementById("you").textContent = "(P1)";
-    document.getElementById("opponent").textContent = "(P2)";
-}
-
 //AVOIDS GAME STATE LOSS AFTER BROWSER REFRESH
 function saveGameStateData() {
     saveData = {
@@ -170,6 +172,28 @@ function handlePlayerMove(event) {
         winMOdal.classList.remove("hidden");
         let playerWinner = "";
         let takes = "";
+
+        //displays winners mask in the modal
+        let mask = gameStatus.winner === "playerX" ? "x" : "o";
+        let pWinner = gameStatus.winner === "playerX" ? "1" : "2";
+        winnerMask.setAttribute("src", `./assets/icon-${mask}.svg`);
+
+        if (gameStatus.winner) {
+            takesText.style.color =
+                gameStatus.winner === "playerX" ? "#31C3BD" : "#F2B137";
+            winnerMask.classList.remove("hidden");
+            playerWinner = `PLAYER ${pWinner} WINS!`;
+            takes = "TAKES THE ROUND";
+            tieText.classList.add("hidden");
+        } else {
+            tieText.textContent = "ROUND TIED";
+            tieText.classList.remove("hidden");
+            winnerMask.classList.add("hidden");
+        }
+
+        winnerText.textContent = playerWinner;
+        takesText.textContent = takes;
+        console.log(mask);
         console.log(gameStatus.winner, "wins!");
     }
 
