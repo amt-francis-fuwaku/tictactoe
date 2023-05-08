@@ -3,11 +3,13 @@ const user = JSON.parse(localStorage.getItem("user"));
 const opponent = JSON.parse(localStorage.getItem("opponent"));
 
 //destructuring
-const [mask1, name1, move1] = user;
-const [mask2, name2, move2] = opponent;
+let [mask1, name1, move1] = user;
+let [mask2, name2, move2] = opponent;
 
 //save and maintain the game after browser refresh
 let gamePlayInterfaceState = [];
+
+let playerTurnIndicator;
 
 //set current player according to chosen mask
 let currentPlayer;
@@ -138,8 +140,38 @@ nextRoundButton.addEventListener("click", handleNextRound);
 cancelButton.addEventListener("click", () => {
     resetModal.classList.add("hidden");
 });
+
+//restart game
 restartButton.addEventListener("click", () => {
-    resetModal.classList.add("hidden");
+    cells.forEach((cell) => {
+        resetModal.classList.add("hidden");
+        cell.classList.remove(user[0]);
+        cell.classList.remove(opponent[0]);
+        cell.removeEventListener("click", handlePlayerMove, { once: true });
+        cell.addEventListener("click", handlePlayerMove, { once: true });
+    });
+
+    //reset playerIndicator to x
+    currentMask.setAttribute("src", "./assets/icon-gray-1.svg");
+
+    //reset interface state after refresh
+    gamePlayInterfaceState = [];
+
+    //reset player movement
+    user[2] = [];
+    opponent[2] = [];
+
+    //reset player to initial state
+    if (user[1] == "playerO") {
+        currentPlayer = opponent;
+    } else if (user[1] == "playerX") {
+        currentPlayer = user;
+    }
+    //
+    //     console.log("length after");
+    //     console.log("user array", user[2].length);
+    //     console.log("opponent array", opponent[2].length);
+    //     console.log("restart");
 });
 
 //gameboard
@@ -170,6 +202,8 @@ function handlePlayerMove(event) {
     placeMask(box, currentPlayer); //places player mask
     //test class  array list
     let gameStatus = checkGameStatus(box.id, gamePlayInterfaceState);
+
+    console.log("inter face ", gamePlayInterfaceState);
 
     // console.log(gameStatus.status);
     if (gameStatus.status === "completed") {
@@ -221,7 +255,7 @@ function switchPlayers() {
         currentPlayer = user;
     }
 
-    let playerTurnIndicator = currentPlayer[0] == "x" ? 1 : 0; //switching current mask
+    playerTurnIndicator = currentPlayer[0] == "x" ? 1 : 0; //switching current mask
     console.log("current mask", playerTurnIndicator);
     currentMask.setAttribute(
         "src",
