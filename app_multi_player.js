@@ -1,25 +1,28 @@
 //set player x | o
-const player1 = JSON.parse(localStorage.getItem("user"));
-const player2 = JSON.parse(localStorage.getItem("opponent"));
+const user = JSON.parse(localStorage.getItem("user"));
+const opponent = JSON.parse(localStorage.getItem("opponent"));
 
 //destructuring
-const [mask1, name1, move1] = player1;
-const [mask2, name2, move2] = player2;
+const [mask1, name1, move1] = user;
+const [mask2, name2, move2] = opponent;
 
 //save and maintain the game after browser refresh
 let gamePlayInterfaceState = [];
 
 //set current player according to chosen mask
-let currentPlayer = name1 ? player2 : player1;
+let currentPlayer;
 
 //set score text base on the chosen player
-if (currentPlayer[1] == "playerO" || currentPlayer[1] == "playerX") {
-    currentPlayer = player2;
+if (user[1] == "playerO") {
+    currentPlayer = opponent;
+    document.getElementById("opponent").textContent = "(P1)";
+    document.getElementById("you").textContent = "(P2)";
+} else if (user[1] == "playerX") {
+    currentPlayer = user;
     document.getElementById("you").textContent = "(P1)";
     document.getElementById("opponent").textContent = "(P2)";
-} else if (currentPlayer[1] == "playerO" || currentPlayer[1] == "playerX") {
 }
-
+console.log(currentPlayer);
 //save game data
 let saveData;
 
@@ -28,13 +31,13 @@ function getPlayerMove(boxID) {
     const isEvenBox = !isOddBox;
     // const play = currentPlayer[2];
     if (
-        (currentPlayer === player1 && isOddBox) ||
-        (currentPlayer === player2 && isEvenBox)
+        (currentPlayer === user && isOddBox) ||
+        (currentPlayer === opponent && isEvenBox)
     ) {
         currentPlayer[2].push(parseInt(boxID));
     } else if (
-        (currentPlayer === player1 && isEvenBox) ||
-        (currentPlayer === player2 && isOddBox)
+        (currentPlayer === user && isEvenBox) ||
+        (currentPlayer === opponent && isOddBox)
     ) {
         currentPlayer[2].push(parseInt(boxID));
     }
@@ -117,17 +120,19 @@ function saveGameStateData() {
     sessionStorage.setItem("gameStateData", JSON.stringify(saveData));
 }
 
+function restoreGameStateData() {
+    saveData = JSON.parse(sessionStorage.getItem("gameStateData"));
+    console.log("interface state", saveData);
+}
+
 //REGISTERING ALL CLICK EVENTS
 
 //menu reset
 resetButton.addEventListener("click", handleReset);
-
 //quit game
 quitButton.addEventListener("click", handleQuitGame);
-
 //next round
 nextRoundButton.addEventListener("click", handleNextRound);
-
 //cancel game
 
 cancelButton.addEventListener("click", () => {
@@ -166,16 +171,24 @@ function handlePlayerMove(event) {
     //test class  array list
     let gameStatus = checkGameStatus(box.id, gamePlayInterfaceState);
 
-    console.log(gameStatus.status);
-
+    // console.log(gameStatus.status);
     if (gameStatus.status === "completed") {
         winMOdal.classList.remove("hidden");
         let playerWinner = "";
         let takes = "";
+        let pWinner;
 
         //displays winners mask in the modal
         let mask = gameStatus.winner === "playerX" ? "x" : "o";
-        let pWinner = gameStatus.winner === "playerX" ? "1" : "2";
+
+        if (user[1] == "playerO") {
+            pWinner = gameStatus.winner === "playerO" ? "1" : "2";
+        }
+
+        if (user[1] == "playerX") {
+            pWinner = gameStatus.winner === "playerO" ? "2" : "1";
+        }
+
         winnerMask.setAttribute("src", `./assets/icon-${mask}.svg`);
 
         if (gameStatus.winner) {
@@ -193,21 +206,27 @@ function handlePlayerMove(event) {
 
         winnerText.textContent = playerWinner;
         takesText.textContent = takes;
-        console.log(mask);
-        console.log(gameStatus.winner, "wins!");
+        // console.log(mask);
+        // console.log(gameStatus.winner, "wins!");
     }
-
     //switch turns
     switchPlayers();
 }
 
 //helper methods
 function switchPlayers() {
-    if (currentPlayer == player1) {
-        currentPlayer = player2;
+    if (currentPlayer == user) {
+        currentPlayer = opponent;
     } else {
-        currentPlayer = player1;
+        currentPlayer = user;
     }
+
+    let playerTurnIndicator = currentPlayer[0] == "x" ? 1 : 0; //switching current mask
+    console.log("current mask", playerTurnIndicator);
+    currentMask.setAttribute(
+        "src",
+        `./assets/icon-gray-${playerTurnIndicator}.svg`
+    );
     // console.log(currentPlayer);
     console.log(`current player :  ${currentPlayer[1]}`);
 
