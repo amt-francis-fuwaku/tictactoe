@@ -241,9 +241,9 @@ const updateScores = () => {
     saveGameStateData(); // update players score || ties
     let savedData = getSavedGameData();
     console.log(savedData);
-    console.log(xScore);
-    console.log(oScore);
-    console.log(tieCount);
+    console.log("x score", savedData.xScore);
+    console.log("o score", savedData.oScore);
+    console.log("tie count", saved.tieCount);
 };
 
 function clearScreen() {
