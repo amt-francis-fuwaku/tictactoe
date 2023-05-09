@@ -111,9 +111,9 @@ const cancelButton = document.getElementById("cancel");
 const restartButton = document.getElementById("restart");
 
 //get data number from scoreboard covert from string =>  number
-let xScore = Number(document.getElementById("you_score").textContent);
-let oScore = Number(document.getElementById("opponent_score").textContent);
-let tieCount = Number(document.getElementById("tie_count").textContent);
+let xScore = parseInt(document.getElementById("you_score").textContent);
+let oScore = parseInt(document.getElementById("opponent_score").textContent);
+let tieCount = parseInt(document.getElementById("tie_count").textContent);
 
 //AVOIDS GAME STATE LOSS AFTER BROWSER REFRESH
 function saveGameStateData() {
