@@ -111,9 +111,12 @@ const cancelButton = document.getElementById("cancel");
 const restartButton = document.getElementById("restart");
 
 //get data number from scoreboard covert from string =>  number
-let xScore = parseInt(document.getElementById("you_score").textContent);
-let oScore = parseInt(document.getElementById("opponent_score").textContent);
-let tieCount = parseInt(document.getElementById("tie_count").textContent);
+let xScore = Number(document.getElementById("you_score").textContent);
+let oScore = Number(document.getElementById("opponent_score").textContent);
+let tieCount = Number(document.getElementById("tie_count").textContent);
+// let xScore = 0;
+// let oScore = 0;
+// let tieCount = 0;
 
 //AVOIDS GAME STATE LOSS AFTER BROWSER REFRESH
 function saveGameStateData() {
@@ -159,13 +162,9 @@ restartButton.addEventListener("click", () => {
 
 // next round
 function handleNextRound() {
-    clearScreen();
-    winMOdal.classList.add("hidden");
-    let savedData = getSavedGameData();
-    console.log(" saved data", savedData);
-
-    // TODO update players score || ties
-    updateScores();
+    winMOdal.classList.add("hidden"); //hides modal box
+    clearScreen(); //clears each player's move
+    updateScores(); // updates xScore | oScore  | tie Count
 }
 
 function handleReset() {
@@ -185,14 +184,9 @@ cells.forEach((cell) => {
 // player move
 function handlePlayerMove(event) {
     const box = event.target; // get a single box
-
     placeMask(box, currentPlayer); //places player mask
-
+    saveGameStateData(); //game saved data
     let gameStatus = checkGameStatus(box.id, gamePlayInterfaceState); //test class  array list
-
-    console.log("inter face ", gamePlayInterfaceState);
-
-    // console.log(gameStatus.status);
     if (gameStatus.status === "completed") {
         winMOdal.classList.remove("hidden");
         let playerWinner = "";
@@ -230,28 +224,26 @@ function handlePlayerMove(event) {
         // console.log(mask);
         // console.log(gameStatus.winner, "wins!");
     }
-
-    //game saved data
-    saveGameStateData();
-    //switch turns
-    switchPlayers();
+    switchPlayers(); //switch turns
 }
 
 //helper methods
 
 const updateScores = () => {
-    let savedData = getSavedGameData();
-
     if (winner == "playerX") {
-        xScore++;
-        console.log(savedData.xScore);
+        xScore += 1;
     } else if (winner == "playerO") {
-        oScore++;
-        console.log(savedData.oScore);
+        oScore += 1;
     } else {
-        tieCount++;
-        console.log(savedData.tieCount);
+        tieCount += 1;
     }
+
+    saveGameStateData(); // update players score || ties
+    let savedData = getSavedGameData();
+    console.log(savedData);
+    console.log(xScore);
+    console.log(oScore);
+    console.log(tieCount);
 };
 
 function clearScreen() {
