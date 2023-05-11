@@ -131,13 +131,10 @@ main {
     position: absolute;
     width: 327px;
     height: 128px;
-    left: 0px;
+    left: 40px;
     top: 301px;
 }
-a {
-    text-decoration: none;
-    position: absolute;
-}
+
 .light-blue-button,
 .light-yellow-button {
     position: absolute;
@@ -154,12 +151,18 @@ a {
     cursor: pointer;
 }
 .light-blue-button {
+    top: 5px;
     left: 0%;
     right: 0%;
     bottom: -5px;
     height: 56px;
     background: #31c3bd;
     box-shadow: inset 0px -8px 0px #118c87;
+    text-decoration: none;
+}
+
+.button-container a {
+    line-height: 60px;
 }
 
 .light-yellow-button {
@@ -169,6 +172,7 @@ a {
     bottom: 10%;
     order: 1;
     height: 56px;
+    text-decoration: none;
     background: #f2b137;
     box-shadow: inset 0px -8px 0px #cc8b13;
 }
@@ -228,15 +232,13 @@ a {
         display: flex;
         flex-direction: column;
         position: absolute;
-        width: 327px;
+        width: 280px;
         height: 128px;
         left: 0px;
         top: 275px;
     }
 }
-
 /*SMALL SCREENS */
-
 @media screen and (min-width: 360px) and (max-width: 360px) {
     main {
         position: absolute;
@@ -276,7 +278,8 @@ a {
     }
     .button-container {
         width: 320px;
-        left: 5px;
+        right: 50px;
+        background-color: #cc8b13;
     }
 }
 
@@ -315,6 +318,10 @@ a {
         width: 198px;
         height: 54px;
         margin-right: 5px;
+    }
+
+    .button-container {
+        left: -5px;
     }
 }
 
