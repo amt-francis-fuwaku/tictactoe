@@ -69,24 +69,21 @@ function getPlayerMove(boxID) {
     return currentPlayer[2];
 }
 
+//wining combination
+const WINNING_COMBINATIONS = [
+    [1, 2, 3], // Top row
+    [4, 5, 6], // Middle row
+    [7, 8, 9], // Bottom row
+    [1, 4, 7], // Left column
+    [2, 5, 8], // Middle column
+    [3, 6, 9], // Right column
+    [1, 5, 9], // Diagonal from top-left to bottom-right
+    [3, 5, 7], // Diagonal from top-right to bottom-left
+];
 //tracks the status of the game
 const checkGameStatus = (boxID, moves) => {
     //let winner
     winner = null;
-    //wining combination
-    const WINNING_COMBINATIONS = [
-        //Rows
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],
-        //Columns
-        [3, 6, 9],
-        [1, 4, 7],
-        [2, 5, 8],
-        //Diagonal
-        [1, 5, 9],
-        [3, 5, 7],
-    ];
 
     let pMoves = getPlayerMove(boxID);
     for (const combination of WINNING_COMBINATIONS) {
@@ -154,8 +151,6 @@ cancelButton.addEventListener("click", () => {
 //restart game
 restartButton.addEventListener("click", () => {
     clearScreen();
-    console.log("user array", user[2].length);
-    console.log("opponent array", opponent[2].length);
 });
 
 // next round
@@ -163,19 +158,14 @@ function handleNextRound() {
     winMOdal.classList.add("hidden"); //hides modal box
     clearScreen();
     updateScores();
-
-    // //reset each player already made move
-    // user[2] = [];
-    // opponent[2] = [];
+}
+//modal cta
+function handleQuitGame() {
+    winMOdal.classList.add("hidden");
 }
 
 function handleReset() {
     resetModal.classList.remove("hidden");
-}
-
-//modal cta
-function handleQuitGame() {
-    console.log("game quit");
 }
 
 //gameboard
@@ -211,7 +201,8 @@ function clearScreen() {
 function gamePlay(event) {
     const box = event.target; // get a single box
     placeMask(box, currentPlayer); //places player mask
-    checkWinner(box.id, tracker);
+    checkWinner(box.id, tracker); //checks winner
+    winEffect(currentPlayer); // add wining highlight effect;
     switchPlayers(); //switch turns
     console.log("from gameplay", currentPlayer);
 }
@@ -297,6 +288,26 @@ cells.forEach((cell) => {
         }
     });
 });
+
+//winning effect
+const winEffect = (currentWinner) => {
+    const winArr = [];
+    cells.forEach((cell) => {
+        if (cell.classList.contains(currentWinner[0])) {
+            winArr.push(parseInt(cell.id));
+            console.log(winArr);
+        }
+    });
+    WINNING_COMBINATIONS.forEach((combo) => {
+        if (combo.every((e) => winArr.includes(e))) {
+            combo.forEach((item) => {
+                cells[item - 1].style.backgroundColor = "red";
+                console.log("players winning combos", cells[item - 1]);
+            });
+        }
+    });
+};
+
 //checkWinner
 const checkWinner = (id, tracker) => {
     let gameStatus = checkGameStatus(id, tracker); //test class  array list
