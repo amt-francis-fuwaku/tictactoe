@@ -7,15 +7,11 @@ let [mask1, name1, move1] = user;
 let [mask2, name2, move2] = opponent;
 
 let winner = null; //let winner
+let tracker = []; // tracks the length of the number  of boxes clicked;
 
-let oMovement = [];
-let xMovement = [];
+let classArray; //for storing classes
 
-//save and maintain the game after browser refresh
-let tracker = [];
-
-// switches current player
-let playerTurnIndicator;
+let playerTurnIndicator; // switches current player
 
 //set current player according to chosen mask
 let currentPlayer;
@@ -107,10 +103,13 @@ let tieCount = Number(document.getElementById("tie_count").textContent);
 
 //AVOIDS GAME STATE LOSS AFTER BROWSER REFRESH
 function saveGameStateData() {
+    playerSavedMove();
     saveData = {
         xScore,
         oScore,
         tieCount,
+        classArray,
+        currentPlayer,
     };
     sessionStorage.setItem("gameStateData", JSON.stringify(saveData));
 }
@@ -120,13 +119,19 @@ function getSavedGameData() {
     return saveData;
 }
 
-//saves game data and state
+//saves game data and state and
 const restoreGameState = () => {
-    let gameSavedState = getSavedGameData();
-    xScore = gameSavedState.xScore;
-    tieCount = gameSavedState.tieCount;
-    oScore = gameSavedState.oScore;
-    //update to the Dom
+    let gameSavedData = getSavedGameData();
+    xScore = gameSavedData.xScore;
+    tieCount = gameSavedData.tieCount;
+    oScore = gameSavedData.oScore;
+    currentPlayer = gameSavedData.currentPlayer;
+    classArray = gameSavedData.classArray;
+    cells.forEach((cell, index) => {
+        cell.classList.add(classArray[index]);
+    });
+
+    console.log("game saved array", gameSavedData.classArray);
     document.getElementById("x_score").textContent = xScore.toString();
     document.getElementById("tie_count").textContent = tieCount.toString();
     document.getElementById("o_score").textContent = oScore.toString();
@@ -201,20 +206,39 @@ function clearScreen() {
 function gamePlay(event) {
     const box = event.target; // get a single box
     placeMask(box, currentPlayer); //places player mask
+    winComboEffect(currentPlayer); // add wining highlight effect;
     checkWinner(box.id, tracker); //checks winner
-    winEffect(currentPlayer); // add wining highlight effect;
     switchPlayers(); //switch turns
-    console.log("from gameplay", currentPlayer);
+    console.log("before game saved current player", currentPlayer);
+    saveGameStateData(); //save game sate
+
+    console.log("after game saved current", currentPlayer);
+    console.log("tracker length BEFORE REFRESH", tracker.length);
 }
 
 //  RESTORING GAME STATE AFTER REFRESH
-if (getSavedGameData()) {
-    console.log("IM HERE AFTER EVERY REFRESH");
+if (getSavedGameData() !== null) {
     restoreGameState();
+    switchPlayers();
+    console.log("get game data", getSavedGameData());
 }
 
 //helper methods
-
+//storing game played state
+const playerSavedMove = () => {
+    classArray = [];
+    cells.forEach((cell) => {
+        if (cell.classList.contains("x")) {
+            classArray.push("x");
+        } else if (cell.classList.contains("circle")) {
+            classArray.push("circle");
+        } else {
+            classArray.push("-");
+        }
+        return classArray;
+    });
+    console.log("class", classArray);
+};
 //update games scores
 const updateScores = () => {
     if (winner == "playerX") {
@@ -290,19 +314,20 @@ cells.forEach((cell) => {
 });
 
 //winning effect
-const winEffect = (currentWinner) => {
+const winComboEffect = (currentWinner) => {
     const winArr = [];
     cells.forEach((cell) => {
         if (cell.classList.contains(currentWinner[0])) {
             winArr.push(parseInt(cell.id));
-            console.log(winArr);
         }
     });
     WINNING_COMBINATIONS.forEach((combo) => {
         if (combo.every((e) => winArr.includes(e))) {
-            combo.forEach((item) => {
-                cells[item - 1].style.backgroundColor = "red";
-                console.log("players winning combos", cells[item - 1]);
+            combo.forEach((index) => {
+                parseInt(index);
+                console.log(index);
+                cells[index - 1].style.backgroundColor = "#F2B137";
+                console.log("players winning combos", cells[index - 1]);
             });
         }
     });
@@ -331,6 +356,7 @@ const checkWinner = (id, tracker) => {
         winnerMask.setAttribute("src", `./assets/icon-${mask}.svg`);
 
         if (gameStatus.winner) {
+            winComboEffect(currentPlayer); // add wining highlight effect;
             takesText.style.color =
                 gameStatus.winner === "playerX" ? "#31C3BD" : "#F2B137";
             winnerMask.classList.remove("hidden");
@@ -350,3 +376,8 @@ const checkWinner = (id, tracker) => {
     }
 };
 /** */
+
+console.log(
+    "get me the length of the tracker after the REFRESH",
+    tracker.length
+);
