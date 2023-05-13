@@ -2,34 +2,6 @@
 const user = JSON.parse(sessionStorage.getItem("user"));
 const opponent = JSON.parse(sessionStorage.getItem("opponent"));
 
-//destructuring
-let [mask1, name1, move1] = user;
-let [mask2, name2, move2] = opponent;
-
-let winner = null; //let winner
-let tracker = []; // tracks the length of the number  of boxes clicked;
-
-let classArray; //for storing classes
-
-let playerTurnIndicator; // switches current player
-
-//set current player according to chosen mask
-let currentPlayer;
-
-//set score text base on the chosen player
-if (user[1] === "playerO") {
-    currentPlayer = opponent;
-    document.getElementById("opponent").textContent = "(P1)";
-    document.getElementById("you").textContent = "(P2)";
-} else if (user[1] == "playerX") {
-    currentPlayer = user;
-    document.getElementById("you").textContent = "(P1)";
-    document.getElementById("opponent").textContent = "(P2)";
-}
-
-//save game data
-let saveData;
-
 //registering html elements || game menu
 const currentMask = document.getElementById("mask_turn");
 const resetButton = document.getElementById("reset");
@@ -55,6 +27,39 @@ const resetModal = document.getElementById("restart_modal");
 //reset cta button
 const cancelButton = document.getElementById("cancel");
 const restartButton = document.getElementById("restart");
+
+//destructuring
+let [mask1, name1, move1] = user;
+let [mask2, name2, move2] = opponent;
+
+let winner = null; //let winner
+let tracker = []; // tracks the length of the number  of boxes clicked;
+
+let classArray; //for storing classes
+
+let playerTurnIndicator = 0; // switches current player
+
+//set current player according to chosen mask
+let currentPlayer;
+
+//set score text base on the chosen player
+if (user[1] === "playerO") {
+    currentPlayer = opponent;
+    document.getElementById("opponent").textContent = "(P1)";
+    document.getElementById("you").textContent = "(P2)";
+} else if (user[1] == "playerX") {
+    currentPlayer = user;
+    document.getElementById("you").textContent = "(P1)";
+    document.getElementById("opponent").textContent = "(P2)";
+}
+
+//get data number from scoreboard covert from string =>  number
+let xScore = Number(document.getElementById("x_score").textContent);
+let oScore = Number(document.getElementById("o_score").textContent);
+let tieCount = Number(document.getElementById("tie_count").textContent);
+
+//save game data
+let saveData;
 
 //this get each players move
 function getPlayerMove(boxID) {
@@ -96,11 +101,6 @@ const checkGameStatus = (boxID, moves) => {
     };
 };
 
-//get data number from scoreboard covert from string =>  number
-let xScore = Number(document.getElementById("x_score").textContent);
-let oScore = Number(document.getElementById("o_score").textContent);
-let tieCount = Number(document.getElementById("tie_count").textContent);
-
 //AVOIDS GAME STATE LOSS AFTER BROWSER REFRESH
 function saveGameStateData() {
     playerSavedMove();
@@ -110,6 +110,8 @@ function saveGameStateData() {
         tieCount,
         classArray,
         currentPlayer,
+        tracker,
+        playerTurnIndicator,
     };
     sessionStorage.setItem("gameStateData", JSON.stringify(saveData));
 }
@@ -125,8 +127,10 @@ const restoreGameState = () => {
     xScore = gameSavedData.xScore;
     tieCount = gameSavedData.tieCount;
     oScore = gameSavedData.oScore;
+    playerTurnIndicator = gameSavedData.playerTurnIndicator;
     currentPlayer = gameSavedData.currentPlayer;
     classArray = gameSavedData.classArray;
+    tracker = gameSavedData.tracker;
     cells.forEach((cell, index) => {
         cell.classList.add(classArray[index]);
     });
@@ -180,19 +184,23 @@ cells.forEach((cell) => {
 
 //clears screen
 function clearScreen() {
+    //reset each players move
     currentMask.setAttribute("src", "./assets/icon-gray-1.svg"); //reset
     cells.forEach((cell) => {
-        tracker = []; //
         resetModal.classList.add("hidden");
         cell.classList.remove(user[0]);
         cell.classList.remove(opponent[0]);
         cell.removeEventListener("click", gamePlay, { once: true });
         cell.addEventListener("click", gamePlay, { once: true });
     });
-
-    //reset each players move
     user[2] = [];
     opponent[2] = [];
+    classArray = [];
+    tracker = [];
+    saveGameStateData();
+    getSavedGameData();
+
+    console.log("i am tracker from after start", tracker);
 
     //reset player to initial state
     if (user[1] == "playerO") {
@@ -205,22 +213,20 @@ function clearScreen() {
 // CLICK  ACTION
 function gamePlay(event) {
     const box = event.target; // get a single box
+    let gameStatus = checkGameStatus(box.id, tracker);
     placeMask(box, currentPlayer); //places player mask
-    winComboEffect(currentPlayer); // add wining highlight effect;
     checkWinner(box.id, tracker); //checks winner
+    winComboEffect(currentPlayer); // add wining highlight effect;
     switchPlayers(); //switch turns
-    console.log("before game saved current player", currentPlayer);
+    turnIndicator();
     saveGameStateData(); //save game sate
+    // player turn indicator
 
+    console.log("before game saved current player", currentPlayer);
+    console.log("game Status ", gameStatus.status);
+    console.log("game  winner", gameStatus.winner);
     console.log("after game saved current", currentPlayer);
     console.log("tracker length BEFORE REFRESH", tracker.length);
-}
-
-//  RESTORING GAME STATE AFTER REFRESH
-if (getSavedGameData() !== null) {
-    restoreGameState();
-    switchPlayers();
-    console.log("get game data", getSavedGameData());
 }
 
 //helper methods
@@ -267,18 +273,17 @@ function switchPlayers() {
     } else {
         currentPlayer = user;
     }
+}
 
+function turnIndicator() {
     playerTurnIndicator = currentPlayer[0] == "x" ? 1 : 0; //switching current mask
-    console.log("current mask", playerTurnIndicator);
     currentMask.setAttribute(
         "src",
         `./assets/icon-gray-${playerTurnIndicator}.svg`
     );
-    // console.log(currentPlayer);
-    console.log(`current player :  ${currentPlayer[1]}`);
-
-    return currentPlayer;
+    console.log("current playerTurnIndicator", playerTurnIndicator);
 }
+
 //places mask on each box
 function placeMask(box, currentPlayer) {
     box.classList.add(currentPlayer[0]);
@@ -371,13 +376,18 @@ const checkWinner = (id, tracker) => {
 
         winnerText.textContent = playerWinner;
         takesText.textContent = takes;
-        // console.log(mask);
-        // console.log(gameStatus.winner, "wins!");
+
+        console.log("game Status  from winner function ", gameStatus.status);
+        console.log("game  winner from winner function", gameStatus.winner);
     }
 };
 /** */
 
-console.log(
-    "get me the length of the tracker after the REFRESH",
-    tracker.length
-);
+//  RESTORING GAME STATE AFTER REFRESH
+if (getSavedGameData() !== null) {
+    cells.forEach((cell) => {});
+    restoreGameState();
+    saveGameStateData();
+    console.log("i am tracker from refresh data", tracker);
+    console.log("player turn indicator", playerTurnIndicator);
+}
