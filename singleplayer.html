@@ -1,82 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./assets/favicon-32x32.png"
-    />
-    <link rel="stylesheet" href="gameplay.css" />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="./assets/favicon-32x32.png"
+        />
+        <link rel="stylesheet" href="./gameplay.css" />
 
-    <title>Frontend Mentor | Tic Tac Toe</title>
-    <!-- <script src="game_script.js" defer></script> -->
-  </head>
-  <body>
-    <main>
-      <!--displays active game information-->
-      <section class="game-menu">
-        <div class="game-icons">
-          <img class="mask" src="./assets/icon-x.svg" alt="x mask" />
-          <img class="mask" src="./assets/icon-o.svg" alt="o mask" />
-        </div>
-        <div class="player-turn">
-          <img src="" alt="" />
-          <p class="next-player">TURN</p>
-        </div>
-        <button class="reset-button">
-          <img src="./assets/icon-restart.svg" alt="reset icon " class="mask" />
-        </button>
-      </section>
-      <!--the main section  for displaying the game-->
-      <section id="gameboard-container" id="gameboard">
-        <div id="1" class="grid-box" data-cell></div>
-        <div id="2" class="grid-box" data-cell></div>
-        <div id="3" class="grid-box" data-cell></div>
-        <div id="4" class="grid-box" data-cell></div>
-        <div id="5" class="grid-box" data-cell></div>
-        <div id="6" class="grid-box" data-cell></div>
-        <div id="7" class="grid-box" data-cell></div>
-        <div id="8" class="grid-box" data-cell></div>
-        <div id="9" class="grid-box" data-cell></div>
-      </section>
+        <title>Frontend Mentor | Tic Tac Toe</title>
+        <!-- <script src="game_script.js" defer></script> -->
+    </head>
 
-      <!--game result information-->
-      <div class="game-result" id="result">
-        <div class="info-box light_blue" id="blue">
-          <div class="display_player" id="winner_display">X (YOU)</div>
-          <div class="total-wins" id="score">14</div>
+    <body>
+        <!-- Game board start -->
+        <div class="body">
+            <div id="overlay"></div>
+            <section id="gameplay-id" class="gameplay">
+                <div class="header">
+                    <div class="xo">
+                        <svg
+                            id="XO"
+                            width="72"
+                            height="32"
+                            viewBox="0 0 72 32"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <g id="Group 2">
+                                <path
+                                    id="Combined Shape Copy"
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M27.681 1.63437C26.5094 0.462798 24.6099 0.4628 23.4383 1.63437L16 9.07271L8.56166 1.63437C7.39009 0.462798 5.49059 0.4628 4.31902 1.63437L1.63437 4.31902C0.462799 5.49059 0.462801 7.39009 1.63437 8.56166L9.07271 16L1.63437 23.4383C0.462798 24.6099 0.4628 26.5094 1.63437 27.681L4.31902 30.3656C5.49059 31.5372 7.39009 31.5372 8.56166 30.3656L16 22.9273L23.4383 30.3656C24.6099 31.5372 26.5094 31.5372 27.681 30.3656L30.3656 27.681C31.5372 26.5094 31.5372 24.6099 30.3656 23.4383L22.9273 16L30.3656 8.56166C31.5372 7.39009 31.5372 5.49059 30.3656 4.31902L27.681 1.63437Z"
+                                    fill="#31C3BD"
+                                />
+                                <path
+                                    id="Oval Copy"
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M71.9704 15.8706C71.9704 7.10551 64.8649 0 56.0998 0C47.3348 0 40.2292 7.10551 40.2292 15.8706C40.2292 24.6357 47.3348 31.7412 56.0998 31.7412C64.8649 31.7412 71.9704 24.6357 71.9704 15.8706ZM49.634 15.8706C49.634 12.2996 52.5289 9.4048 56.0998 9.4048C59.6708 9.4048 62.5656 12.2996 62.5656 15.8706C62.5656 19.4416 59.6708 22.3364 56.0998 22.3364C52.5289 22.3364 49.634 19.4416 49.634 15.8706Z"
+                                    fill="#F2B137"
+                                />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="turn">
+                        <img
+                            id="turn-icon-img"
+                            src="./assets/icon-x-grey.svg"
+                            alt="turn-icon"
+                        />
+                        <span id="turn">TURN</span>
+                    </div>
+                    <div id="restart-icon" class="return">
+                        <img src="./assets/icon-restart.svg" alt="return" />
+                    </div>
+                </div>
+                <div id="gameplay-board" class="boxes">
+                    <div class="box" id="0"></div>
+                    <div class="box" id="1"></div>
+                    <div class="box" id="2"></div>
+                    <div class="box" id="3"></div>
+                    <div class="box" id="4"></div>
+                    <div class="box" id="5"></div>
+                    <div class="box" id="6"></div>
+                    <div class="box" id="7"></div>
+                    <div class="box" id="8"></div>
+                </div>
+                <div class="footer">
+                    <div id="you-rg" class="you">
+                        <span id="you">X (YOU)</span>
+                        <span class="num" id="player-score">0</span>
+                    </div>
+                    <div class="ties">
+                        <span id="ties">TIES</span>
+                        <span class="num" id="ties-count">0</span>
+                    </div>
+                    <div id="cpu-rg" class="ocpu">
+                        <span id="cpu">O (CPU)</span>
+                        <span class="num" id="cpu-score">0</span>
+                    </div>
+                </div>
+            </section>
+            <div id="states" class="states">
+                <p id="state-text"></p>
+                <div id="states-message" class="states-message">
+                    <span id="win-icon"></span>
+                    <span id="ttr">TAKES THIS ROUND</span>
+                </div>
+                <div class="states-buttons">
+                    <a href="./index.html"><button id="quit">QUIT</button></a>
+                    <button id="next-round">NEXT ROUND</button>
+                </div>
+            </div>
+            <div id="restart-states" class="states">
+                <div id="restart-states-message" class="states-message">
+                    <span id="restart-ttr">TAKES THIS ROUND</span>
+                </div>
+                <div class="states-buttons">
+                    <button id="cancel">NO, CANCEL</button>
+                    <button id="restart">YES, RESTART</button>
+                </div>
+            </div>
         </div>
-        <div class="info-box gray">
-          <div class="ties">TIES</div>
-          <div class="total-wins" id="tie_score">32</div>
-        </div>
-        <div class="info-box light_yellow" id="yelow">
-          <div class="display_player" id="winner_display_opponent">O (COM)</div>
-          <div class="total-wins" id="opponent_socre">11</div>
-        </div>
-      </div>
-    </main>
-    <div id="modal_container" class="pop_container hidden">
-      <div class="popup_message">
-        <p id="player_winner" class="winner_text"></p>
-        <div class="winner_message" id="winner_modal">
-          <img class="winner_mask hidden" id="winning_player_mask" />
-          <p id="takes_round" class="round_text"></p>
-          <p class="tie_message" id="tie"></p>
-        </div>
-        <div class="cta_buttons">
-          <button class="quit_button" id="quitButton">QUIT</button>
-          <button class="next_round_button" id="nextRoundButton">
-            NEXT ROUND
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <script src="app_single_player.js" type="module"></script>
-  </body>
+        <script src="./app_single_player.js"></script>
+    </body>
 </html>

@@ -1,393 +1,350 @@
-//set player x | o
-const user = JSON.parse(sessionStorage.getItem("user"));
-const opponent = JSON.parse(sessionStorage.getItem("opponent"));
+// user and objects loaded from storage
+let p1 = JSON.parse(sessionStorage.getItem("user"));
+let p2 = JSON.parse(sessionStorage.getItem("opponent"));
 
-//registering html elements || game menu
-const currentMask = document.getElementById("mask_turn");
-const resetButton = document.getElementById("reset");
+// saves gameData
+let saveData;
+// saves classList for saveData
+let arr;
 
-//registering html elements || game display board
-const cells = Array.from(document.querySelectorAll("[data-cell]"));
-
-//registering html elements || game modal display
-//win modal
-const winMOdal = document.getElementById("win_modal");
-const displayModal = document.getElementById("modal");
-
-// win modal call to action button
-const quitButton = document.getElementById("quitButton");
-const nextRoundButton = document.getElementById("nextRoundButton");
-const winnerText = document.getElementById("winner");
-const winnerMask = document.getElementById("winning_player_mask");
-const takesText = document.getElementById("takes");
-const tieText = document.getElementById("tie");
-
-//rest modal
-const resetModal = document.getElementById("restart_modal");
-//reset cta button
-const cancelButton = document.getElementById("cancel");
-const restartButton = document.getElementById("restart");
-
-//destructuring
-let [mask1, name1, move1] = user;
-let [mask2, name2, move2] = opponent;
-
-let winner = null; //let winner
-let tracker = []; // tracks the length of the number  of boxes clicked;
-
-let classArray; //for storing classes
-
-let playerTurnIndicator = 0; // switches current player
-
-//set current player according to chosen mask
+//set current player based on selected starting icon
 let currentPlayer;
 
-//set score text base on the chosen player
-if (user[1] === "playerO") {
-    currentPlayer = opponent;
-    document.getElementById("opponent").textContent = "(P1)";
-    document.getElementById("you").textContent = "(P2)";
-} else if (user[1] == "playerX") {
-    currentPlayer = user;
-    document.getElementById("you").textContent = "(P1)";
-    document.getElementById("opponent").textContent = "(P2)";
+// sets current player based on mark chosen
+if (p1[2] == "playerO") {
+    currentPlayer = p2;
+} else {
+    currentPlayer = p1;
 }
 
-//get data number from scoreboard covert from string =>  number
-let xScore = Number(document.getElementById("x_score").textContent);
-let oScore = Number(document.getElementById("o_score").textContent);
-let tieCount = Number(document.getElementById("tie_count").textContent);
+const restartBtn = document.getElementById("restart-icon");
+const confirmRestart = document.getElementById("restart");
+const overlay = document.getElementById("overlay");
+const cancelBtn = document.getElementById("cancel");
+const nextRound = document.getElementById("next-round");
+const boxArr = Array.from(document.querySelectorAll(".box"));
 
-//save game data
-let saveData;
-
-//this get each players move
-function getPlayerMove(boxID) {
-    const validBox = currentPlayer === user || currentPlayer === opponent;
-    if (validBox) {
-        currentPlayer[2].push(parseInt(boxID));
-    }
-    return currentPlayer[2];
+// set score area text and color
+if (p1[2] == "playerO") {
+    document.getElementById("you").innerHTML = "O (P1)";
+    document.getElementById("p1-rg").style.backgroundColor = p1[1];
+    document.getElementById("cpu").innerHTML = "X (P2)";
+    document.getElementById("p2-rg").style.backgroundColor = p2[1];
 }
 
-//wining combination
-const WINNING_COMBINATIONS = [
-    [1, 2, 3], // Top row
-    [4, 5, 6], // Middle row
-    [7, 8, 9], // Bottom row
-    [1, 4, 7], // Left column
-    [2, 5, 8], // Middle column
-    [3, 6, 9], // Right column
-    [1, 5, 9], // Diagonal from top-left to bottom-right
-    [3, 5, 7], // Diagonal from top-right to bottom-left
-];
-//tracks the status of the game
-const checkGameStatus = (boxID, moves) => {
-    //let winner
-    winner = null;
+//turn icon functions
+let turnIcon = document.getElementById("turn-icon-img");
 
-    let pMoves = getPlayerMove(boxID);
-    for (const combination of WINNING_COMBINATIONS) {
-        const isWinner = combination.every((com) => pMoves.includes(com));
-        if (isWinner) {
-            winner = currentPlayer[1];
-        }
-    }
-
-    return {
-        status:
-            moves.length === 9 || winner != null ? "completed" : "in-progress",
-        winner: winner,
-    };
+//changes the turn icon based on current player
+const changeTurnIcon = () => {
+    turnIcon.src = currentPlayer[3];
 };
 
-//AVOIDS GAME STATE LOSS AFTER BROWSER REFRESH
-function saveGameStateData() {
-    playerSavedMove();
+let p1Score = Number(document.getElementById("player-score").innerHTML);
+let tiesCount = Number(document.getElementById("ties-count").innerHTML);
+let p2Score = Number(document.getElementById("cpu-score").innerHTML);
+
+// switches turn
+let turn = p1[2] == "playerX";
+
+// BROWSER RELOAD SAVE FUNCTIONALITY START
+function saveGameState() {
+    savedUI();
     saveData = {
-        xScore,
-        oScore,
-        tieCount,
-        classArray,
+        p1Score,
+        turn,
+        tiesCount,
+        p2Score,
         currentPlayer,
-        tracker,
-        playerTurnIndicator,
+        arr,
     };
-    sessionStorage.setItem("gameStateData", JSON.stringify(saveData));
+    sessionStorage.setItem("gameData", JSON.stringify(saveData));
+    // console.log('saved game state')
 }
 
-function getSavedGameData() {
-    saveData = JSON.parse(sessionStorage.getItem("gameStateData"));
-    return saveData;
-}
-
-//saves game data and state and
-const restoreGameState = () => {
-    let gameSavedData = getSavedGameData();
-    xScore = gameSavedData.xScore;
-    tieCount = gameSavedData.tieCount;
-    oScore = gameSavedData.oScore;
-    playerTurnIndicator = gameSavedData.playerTurnIndicator;
-    currentPlayer = gameSavedData.currentPlayer;
-    classArray = gameSavedData.classArray;
-    tracker = gameSavedData.tracker;
-    cells.forEach((cell, index) => {
-        cell.classList.add(classArray[index]);
+function restoreGameState() {
+    // console.log('called restore Game state')
+    saveData = JSON.parse(sessionStorage.getItem("gameData"));
+    console.log(saveData);
+    turn = saveData.turn;
+    currentPlayer = saveData.currentPlayer;
+    p1Score = saveData.p1Score;
+    tiesCount = saveData.tiesCount;
+    p2Score = saveData.p2Score;
+    boxArr.forEach((box, index) => {
+        box.classList.add(saveData.arr[index]);
     });
 
-    console.log("game saved array", gameSavedData.classArray);
-    document.getElementById("x_score").textContent = xScore.toString();
-    document.getElementById("tie_count").textContent = tieCount.toString();
-    document.getElementById("o_score").textContent = oScore.toString();
-};
+    // update scores
+    document.getElementById("cpu-score").innerHTML = p2Score.toString();
+    document.getElementById("player-score").innerHTML = p1Score.toString();
+    document.getElementById("ties-count").innerHTML = tiesCount.toString();
+    console.log(turn);
+    console.log(currentPlayer[2]);
 
-//REGISTERING ALL CLICK EVENTS
-//menu reset
-resetButton.addEventListener("click", handleReset);
-//quit game
-quitButton.addEventListener("click", handleQuitGame);
-//next round
-nextRoundButton.addEventListener("click", handleNextRound);
-//cancel game
-
-cancelButton.addEventListener("click", () => {
-    resetModal.classList.add("hidden");
-});
-
-//defining all click events call back function || handlers
-//reset
-
-//restart game
-restartButton.addEventListener("click", () => {
-    clearScreen();
-});
-
-// next round
-function handleNextRound() {
-    winMOdal.classList.add("hidden"); //hides modal box
-    clearScreen();
-    updateScores();
-}
-//modal cta
-function handleQuitGame() {
-    winMOdal.classList.add("hidden");
-}
-
-function handleReset() {
-    resetModal.classList.remove("hidden");
-}
-
-//gameboard
-cells.forEach((cell) => {
-    cell.addEventListener("click", gamePlay, { once: true });
-});
-
-//clears screen
-function clearScreen() {
-    //reset each players move
-    currentMask.setAttribute("src", "./assets/icon-gray-1.svg"); //reset
-    cells.forEach((cell) => {
-        resetModal.classList.add("hidden");
-        cell.classList.remove(user[0]);
-        cell.classList.remove(opponent[0]);
-        cell.removeEventListener("click", gamePlay, { once: true });
-        cell.addEventListener("click", gamePlay, { once: true });
-    });
-    user[2] = [];
-    opponent[2] = [];
-    classArray = [];
-    tracker = [];
-    saveGameStateData();
-    getSavedGameData();
-
-    console.log("i am tracker from after start", tracker);
-
-    //reset player to initial state
-    if (user[1] == "playerO") {
-        currentPlayer = opponent;
-    } else if (user[1] == "playerX") {
-        currentPlayer = user;
+    //solve turn issues
+    if (turn == false && currentPlayer[2] == p1[2]) {
+        console.log("checking conditions");
+        turn = true;
+        gameplay();
+        turn = !turn;
+        console.log(turn);
+    } else if (turn == true && currentPlayer[2] == p2[2]) {
+        turn = false;
+        gameplay();
+        turn = !turn;
+    } else {
+        gameplay();
     }
 }
-
-// CLICK  ACTION
-function gamePlay(event) {
-    const box = event.target; // get a single box
-    let gameStatus = checkGameStatus(box.id, tracker);
-    placeMask(box, currentPlayer); //places player mask
-    checkWinner(box.id, tracker); //checks winner
-    winComboEffect(currentPlayer); // add wining highlight effect;
-    switchPlayers(); //switch turns
-    turnIndicator();
-    saveGameStateData(); //save game sate
-    // player turn indicator
-
-    console.log("before game saved current player", currentPlayer);
-    console.log("game Status ", gameStatus.status);
-    console.log("game  winner", gameStatus.winner);
-    console.log("after game saved current", currentPlayer);
-    console.log("tracker length BEFORE REFRESH", tracker.length);
-}
-
-//helper methods
-//storing game played state
-const playerSavedMove = () => {
-    classArray = [];
-    cells.forEach((cell) => {
-        if (cell.classList.contains("x")) {
-            classArray.push("x");
-        } else if (cell.classList.contains("circle")) {
-            classArray.push("circle");
+// save data for class list
+const savedUI = () => {
+    arr = [];
+    boxArr.forEach((box) => {
+        if (box.classList.contains("playerX")) {
+            arr.push("playerX");
+        } else if (box.classList.contains("playerO")) {
+            arr.push("playerO");
         } else {
-            classArray.push("-");
+            arr.push("a");
         }
-        return classArray;
+        return arr;
     });
-    console.log("class", classArray);
 };
-//update games scores
-const updateScores = () => {
-    if (winner == "playerX") {
-        xScore += 1;
-    } else if (winner == "playerO") {
-        oScore += 1;
-    } else {
-        tieCount += 1;
-    }
+// BROWSER END
 
-    saveGameStateData(); // update players score || ties
-    let savedData = getSavedGameData();
-    document.getElementById("x_score").textContent = saveData.xScore;
-    document.getElementById("tie_count").textContent = savedData.tieCount;
-    document.getElementById("o_score").textContent = savedData.oScore;
-
-    console.log(savedData);
-    // console.log("o score", savedData.oScore);
-    // console.log("tie count", savedData.tieCount);
-};
-
-//switch player
-function switchPlayers() {
-    if (currentPlayer == user) {
-        currentPlayer = opponent;
-    } else {
-        currentPlayer = user;
-    }
-}
-
-function turnIndicator() {
-    playerTurnIndicator = currentPlayer[0] == "x" ? 1 : 0; //switching current mask
-    currentMask.setAttribute(
-        "src",
-        `./assets/icon-gray-${playerTurnIndicator}.svg`
+// get empty boxes
+const getEmpty = () => {
+    return boxArr.filter(
+        (cell) =>
+            !cell.classList.contains(p1[2]) && !cell.classList.contains(p2[2])
     );
-    console.log("current playerTurnIndicator", playerTurnIndicator);
-}
+};
 
-//places mask on each box
-function placeMask(box, currentPlayer) {
-    box.classList.add(currentPlayer[0]);
-    tracker.push(currentPlayer[0]);
-    box.style.background = "";
-}
-//on mouseenter enter effect
-cells.forEach((cell) => {
-    cell.addEventListener("mouseenter", () => {
-        //checks if a cell already contains a mask
-        if (cell.classList.contains("x") || cell.classList.contains("circle")) {
-            return;
-        }
+//WIN, LOSE AND TIED STATE
+const WIN_COMBOS = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+];
 
-        if (currentPlayer[0] == "x") {
-            cell.style.backgroundImage = "url(./assets/icon-x-outline.svg)";
-        } else {
-            cell.style.background = "url(./assets/icon-o-outline.svg)";
-        }
-        cell.style.backgroundRepeat = "no-repeat";
-        cell.style.backgroundPosition = "50%";
+// check win
+const checkWin = (mark) => {
+    return WIN_COMBOS.some((combo) => {
+        return combo.every((element) => {
+            let winner = boxArr[element].classList.contains(mark);
+            return winner;
+        });
     });
-});
-//on mouseleave effect
-cells.forEach((cell) => {
-    cell.addEventListener("mouseleave", () => {
-        if (currentPlayer[0] == "x") {
-            cell.style.background = "";
-        } else {
-            cell.style.background = "";
-        }
-    });
+};
+
+// check if gameboard is full
+const boardFull = () => {
+    return boxArr.every(
+        (val) => val.classList.contains(p1[2]) || val.classList.contains(p2[2])
+    );
+};
+
+// brings up restart state
+const restartState = () => {
+    document.getElementById("restart-ttr").innerHTML = "RESTART GAME?";
+    document.getElementById("restart-ttr").style.color = "#A8BFC9";
+    document.getElementById("restart-states").style.visibility = "visible";
+    overlay.style.visibility = "visible";
+};
+
+restartBtn.addEventListener("click", restartState);
+
+// restart game
+confirmRestart.addEventListener("click", () => {
+    clrScreen();
+    saveGameState();
+    gameplay();
 });
 
-//winning effect
-const winComboEffect = (currentWinner) => {
+// removes restart state
+cancelBtn.addEventListener("click", () => {
+    document.getElementById("restart-states").style.visibility = "hidden";
+    overlay.style.visibility = "hidden";
+});
+
+// brings up tied state
+const tiedState = () => {
+    tiesCount += 1;
+    document.getElementById("ties-count").innerHTML = tiesCount.toString();
+    document.getElementById("state-text").innerHTML = "";
+    document.getElementById("win-icon").innerHTML = "";
+    document.getElementById("ttr").innerHTML = "ROUND TIED";
+    document.getElementById("ttr").style.color = "#A8BFC9";
+    document.getElementById("states-message").style.columnGap = "0px";
+    document.getElementById("states").style.visibility = "visible";
+    overlay.style.visibility = "visible";
+};
+
+//clear screen
+const clrScreen = () =>
+    boxArr.forEach((item) => {
+        item.classList.remove(p1[2]);
+        item.classList.remove(p2[2]);
+        document.getElementById("states").style.visibility = "hidden";
+        document.getElementById("restart-states").style.visibility = "hidden";
+        overlay.style.visibility = "hidden";
+        item.style.backgroundColor = "#1F3641";
+        item.style.backgroundImage = "";
+    });
+
+// setting hovers
+const hover = (item) => {
+    if (currentPlayer[2] == "playerO") {
+        item.style.backgroundImage = "url(./assets/icon-o-outline.svg)";
+    } else {
+        item.style.backgroundImage = "url(./assets/icon-x-outline.svg)";
+    }
+    item.style.backgroundRepeat = "no-repeat";
+    item.style.backgroundPosition = "50%";
+};
+
+const setHover = () => {
+    getEmpty().forEach((cell) => {
+        cell.addEventListener("mouseenter", () => hover(cell));
+        cell.addEventListener(
+            "mouseleave",
+            () => (cell.style.backgroundImage = "")
+        );
+    });
+};
+
+// create highlight on win icons
+const winEffect = (caller) => {
     const winArr = [];
-    cells.forEach((cell) => {
-        if (cell.classList.contains(currentWinner[0])) {
-            winArr.push(parseInt(cell.id));
+    boxArr.forEach((box) => {
+        if (box.classList.contains(caller[2])) {
+            winArr.push(Number(box.id));
         }
     });
-    WINNING_COMBINATIONS.forEach((combo) => {
+    WIN_COMBOS.forEach((combo) => {
         if (combo.every((e) => winArr.includes(e))) {
-            combo.forEach((index) => {
-                parseInt(index);
-                console.log(index);
-                cells[index - 1].style.backgroundColor = "#F2B137";
-                console.log("players winning combos", cells[index - 1]);
+            combo.forEach((item) => {
+                // console.log(item)
+                boxArr[item].style.backgroundColor = caller[1];
+                // console.log()
+                boxArr[item].style.backgroundImage = caller[4];
             });
         }
     });
 };
 
-//checkWinner
-const checkWinner = (id, tracker) => {
-    let gameStatus = checkGameStatus(id, tracker); //test class  array list
-    if (gameStatus.status === "completed") {
-        winMOdal.classList.remove("hidden");
-        let playerWinner = "";
-        let takes = "";
-        let pWinner;
+// checks if box is empty
+const isValid = (box) => {
+    if (box.classList.contains(p1[2]) || box.classList.contains(p2[2])) {
+        return false;
+    }
+    return true;
+};
 
-        //displays winners mask in the modal
-        let mask = gameStatus.winner === "playerX" ? "x" : "o";
-
-        if (user[1] == "playerO") {
-            pWinner = gameStatus.winner === "playerO" ? "1" : "2";
-        }
-
-        if (user[1] == "playerX") {
-            pWinner = gameStatus.winner === "playerO" ? "2" : "1";
-        }
-
-        winnerMask.setAttribute("src", `./assets/icon-${mask}.svg`);
-
-        if (gameStatus.winner) {
-            winComboEffect(currentPlayer); // add wining highlight effect;
-            takesText.style.color =
-                gameStatus.winner === "playerX" ? "#31C3BD" : "#F2B137";
-            winnerMask.classList.remove("hidden");
-            playerWinner = `PLAYER ${pWinner} WINS!`;
-            takes = "TAKES THE ROUND";
-            tieText.classList.add("hidden");
-        } else {
-            tieText.textContent = "ROUND TIED";
-            tieText.classList.remove("hidden");
-            winnerMask.classList.add("hidden");
-        }
-
-        winnerText.textContent = playerWinner;
-        takesText.textContent = takes;
-
-        console.log("game Status  from winner function ", gameStatus.status);
-        console.log("game  winner from winner function", gameStatus.winner);
+const updateScore = () => {
+    if (currentPlayer == p1) {
+        p1Score += 1;
+    } else {
+        p2Score += 1;
     }
 };
-/** */
 
-//  RESTORING GAME STATE AFTER REFRESH
-if (getSavedGameData() !== null) {
-    cells.forEach((cell) => {});
-    restoreGameState();
-    saveGameStateData();
-    console.log("i am tracker from refresh data", tracker);
-    console.log("player turn indicator", playerTurnIndicator);
+// brings up win state
+const statePop = () => {
+    if (currentPlayer == p1) {
+        document.getElementById("player-score").innerHTML = p1Score.toString();
+        document.getElementById("state-text").innerHTML = "PLAYER 1 WINS!";
+        document.getElementById("ttr").innerHTML = "TAKES THIS ROUND";
+        document.getElementById("states-message").style.columnGap = "24px";
+        document.getElementById("win-icon").innerHTML = p1[0];
+        document.getElementById("ttr").style.color = p1[1];
+        document.getElementById("states").style.visibility = "visible";
+        overlay.style.visibility = "visible";
+    } else {
+        document.getElementById("cpu-score").innerHTML = p2Score.toString();
+        document.getElementById("state-text").innerHTML = "PLAYER 2 WINS!";
+        document.getElementById("ttr").innerHTML = "TAKES THIS ROUND";
+        document.getElementById("states-message").style.columnGap = "24px";
+        document.getElementById("win-icon").innerHTML = p2[0];
+        document.getElementById("ttr").style.color = p2[1];
+        document.getElementById("states").style.visibility = "visible";
+        overlay.style.visibility = "visible";
+    }
+};
+
+// changes currentPlayer
+const changePlayer = () => {
+    if (currentPlayer == p1) {
+        currentPlayer = p2;
+    } else {
+        currentPlayer = p1;
+    }
+    return currentPlayer;
+};
+
+// player actions
+function action(evt) {
+    if (isValid(evt.target) && !boardFull()) {
+        evt.target.classList.add(currentPlayer[2]);
+        evt.target.addEventListener(
+            "mouseenter",
+            () => (evt.target.style.backgroundImage = "")
+        );
+        if (checkWin(currentPlayer[2])) {
+            winEffect(currentPlayer);
+            updateScore();
+            statePop();
+            changePlayer();
+            changeTurnIcon();
+            saveGameState();
+            return;
+        }
+        changePlayer();
+        changeTurnIcon();
+        console.log(currentPlayer[2]);
+        saveGameState();
+        if (boardFull()) {
+            tiedState();
+        }
+    }
 }
+
+// calls next round
+nextRound.addEventListener("click", () => {
+    turn = !turn;
+    clrScreen();
+    saveGameState();
+    gameplay();
+});
+
+// game play
+const gameplay = () => {
+    console.log("gameplay called");
+    setHover();
+
+    if (turn) {
+        currentPlayer = p1;
+        turnIcon.src = p1[3];
+        boxArr.forEach((box) => {
+            box.addEventListener("click", action);
+        });
+    } else {
+        currentPlayer = p2;
+        turnIcon.src = p2[3];
+        boxArr.forEach((box) => {
+            box.addEventListener("click", action);
+        });
+    }
+};
+
+if (sessionStorage.getItem("gameData") !== null) {
+    restoreGameState();
+}
+
+gameplay();

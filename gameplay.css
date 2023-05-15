@@ -1,810 +1,339 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@700&display=swap");
-body {
-    background-color: #1a2a33;
-    color: antiquewhite;
-    margin: 0;
-    padding: 0;
+* {
     box-sizing: border-box;
     font-family: "Outfit", sans-serif;
-}
-.x {
-    background-image: url("./assets/icon-x.svg");
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 40px;
-    height: 40px;
-    z-index: 999;
-}
-
-.circle {
-    background-image: url("./assets/icon-o.svg");
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 40px;
-    height: 40px;
-    z-index: 999;
-}
-
-.game-menu {
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    width: 315px;
-    height: 40px;
-    left: 24px;
-    top: 24px;
-}
-.game-icons {
-    margin-left: 15px;
-}
-.next-player {
-    font-size: 14px;
-    text-align: center;
-    width: 96px;
-    height: 40px;
-}
-
-.menu-icons {
-    cursor: pointer;
-    display: flex;
-    width: 31.74px;
-    height: 31.74px;
-    left: 64.23px;
-    top: 28px;
-    margin-left: 24px;
-}
-.mask {
-    height: 32px;
-    width: 32px;
-}
-
-.player-turn {
-    display: flex;
-    width: 96px;
-    height: 40px;
-    padding: 3px;
-    background: #1f3641;
-    box-shadow: inset 0px -4px 0px #10212a;
-    border-radius: 5px;
-    margin-left: -25px;
-}
-.player_mask {
-    height: 16px;
-    width: 16px;
-    position: absolute;
-    left: 40%;
-    top: 35%;
-}
-
-.next-player {
-    position: absolute;
-    top: 0;
-    left: 40%;
-}
-
-.reset-button {
-    cursor: pointer;
-    background: #a8bfc9;
-    box-shadow: inset 0px -4px 0px #6b8997;
-    border-radius: 5px;
-    width: 40px;
-    height: 40px;
-}
-
-#gameboard-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    padding: 20px;
-    position: absolute;
-    top: 128px;
-    padding: 0;
-    left: 35px;
-    gap: 10px;
-}
-.grid-box,
-.info-box {
-    background-color: #1f3641;
-    height: 96px;
-    width: 96px;
-    box-shadow: inset 0px -8px 0px #10212a;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 60px;
-}
-
-.grid-box {
-    cursor: pointer;
-}
-
-.info-box {
-    height: 64px;
-    width: 96px;
-    border: none;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
-.game-result {
-    display: flex;
-    position: absolute;
-    width: 328px;
-    height: 64px;
-    left: 35px;
-    top: 476px;
-    gap: 10px;
-}
-
-.horizontal {
-    display: flex;
-    justify-content: center;
-}
-
-.light_blue {
-    background-color: #31c3bd;
-    border-radius: 10px;
-    padding-top: 5px;
-    text-align: center;
-}
-
-.gray {
-    background-color: #a8bfc9;
-    border-radius: 10px;
-    padding-top: 5px;
-    text-align: center;
-}
-
-.light_yellow {
-    background-color: #f2b137;
-    border-radius: 10px;
-    padding-top: 5px;
-    text-align: center;
-}
-
-.display_player,
-.ties {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 18px;
-    text-align: center;
-    letter-spacing: 0.875px;
-    color: #1a2a33;
-}
-.total-wins {
-    font-style: normal;
     font-weight: 700;
-    font-size: 24px;
-    line-height: 30px;
-    text-align: center;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #1a2a33;
+    margin: 0;
+    padding: 0;
 }
 
-/* pop message*/
-.pop_container {
+body {
+    background-color: #1a2a33;
+    width: 100vw;
+    height: 90vh;
+    margin-top: 10vh;
+}
+
+#overlay {
+    visibility: hidden;
     position: fixed;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(0px);
-    z-index: 999999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.hidden {
-    display: none;
+    background-color: #000;
+    opacity: 0.75;
+    z-index: 1;
+    width: 100vw;
+    height: 100%;
 }
 
-.popup_message {
+.body {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+}
+
+.gameplay {
+    width: 460px;
+    height: 623px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.header {
+    width: 100%;
+    height: 52px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.boxes {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.5rem, 1vw, 2rem);
+}
+
+.box {
+    border-radius: 15px;
+    aspect-ratio: 1;
+    background: #1f3641;
+    box-shadow: 0px -8px 0px 0px #10212a inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer {
+    width: 100%;
+    height: 72px;
+    margin-top: 1vw;
+    display: flex;
+    gap: 1vw;
+    justify-content: space-between;
+}
+
+.turn {
+    margin-left: -23px;
+    color: #a8bfc9;
+    display: flex;
+    justify-content: center;
+    column-gap: 5px;
+    align-items: center;
+    width: 140px;
+    height: 52px;
     background-color: #1f3641;
-    width: 100%;
-    height: 228px;
-    position: absolute;
-    top: 30%;
+    box-shadow: inset 0px -4px 0px #10212a;
+    border-radius: 10px;
 }
-.winner_announcer {
-    position: absolute;
+
+#turn-icon-img {
+    height: 15px;
+    filter: invert(79%) sepia(32%) saturate(145%) hue-rotate(153deg)
+        brightness(90%) contrast(89%);
+}
+
+.return {
+    width: 52px;
+    height: 52px;
+    background-color: #a8bfc9;
+    box-shadow: inset 0px -4px 0px #6b8997;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.return img {
+    width: 20px;
     height: 20px;
-    left: 25.76%;
-    right: 36.56%;
-    width: 50%;
-    top: 0px;
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 20px;
-    text-align: center;
-    letter-spacing: 1px;
-    color: #a8bfc9;
-}
-.winner_text {
-    position: absolute;
-    top: 10%;
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 18px;
-    text-align: center;
-    letter-spacing: 0.875px;
-    color: #a8bfc9;
-}
-.winner_message {
-    width: 100%;
-    position: absolute;
-    top: 40%;
-    left: 5%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.tie_message {
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 30px;
-    position: absolute;
-    left: 23%;
-    color: #a8bfc9;
-}
-.winner_mask {
-    height: 40px;
-    width: 40px;
-    position: absolute;
-    left: 5%;
 }
 
-.round_text {
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 30px;
-    letter-spacing: 1.5px;
-    position: absolute;
-    right: 20%;
-    text-transform: uppercase;
+.you {
+    background-color: #31c3bd;
+    border-radius: 15px;
+    /* margin: 10px; */
+    /* margin-right: 20px; */
+    width: 31%;
+    /* height: 72px; */
+    text-align: center;
+    padding-top: 5px;
 }
 
-.cta_buttons {
+#you {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    position: absolute;
-    bottom: 15%;
-}
-.quit_button {
-    cursor: pointer;
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 20px;
-    text-align: center;
-    letter-spacing: 1px;
+    flex-direction: column;
+    padding-top: 5px;
     color: #1a2a33;
-    height: 52px;
+    font-size: 10px;
+    font-weight: 15px;
+    font: 10px;
+    /* text-align: center; */
+}
+
+.ties {
+    background-color: #a8bfc9;
+    border-radius: 10px;
+    /* margin: 10px; */
+    /* margin-right: 15px; */
+    width: 31%;
+    /* height: 72px; */
+    text-align: center;
+    padding-top: 5px;
+}
+
+#ties {
+    font-family: Outfit;
+    font-size: 10px;
+    font-weight: 15px;
+    font: 10px;
+}
+
+.ocpu {
+    background-color: #f2b137;
+    border-radius: 15px;
+    /* margin: 10px; */
+    /* margin-right: 10px; */
+    width: 31%;
+    /* height: 72px; */
+    /* left: 491px; */
+    /* top: 690px; */
+    text-align: center;
+    padding-top: 5px;
+}
+
+#cpu {
+    display: flex;
+    flex-direction: column;
+    padding-top: 5px;
+    font-size: 10px;
+    font-weight: 15px;
+    font: 10px;
+}
+
+.num {
+    display: flex;
+    flex-direction: column;
+    padding-top: 5px;
+    font-weight: 600;
+}
+
+/* Hover starts*/
+.return:hover {
+    cursor: pointer;
+    background-color: #dbe8ed;
+}
+
+/* .box:hover {
+    cursor: pointer;
+    background: url(./starter-code/assets/icon-x-outline.svg);
+    background-repeat: no-repeat;
+    background-position: 50%;
+} */
+
+#next-round:hover {
+    background-color: #ffc860;
+    cursor: pointer;
+}
+
+#quit:hover {
+    background-color: #dbe8ed;
+    cursor: pointer;
+}
+/* Hover ends */
+
+/* ernest add starts here */
+.playerX {
+    background-image: url(./assets/icon-x.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.playerO {
+    background-image: url(./assets/icon-o.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.states {
+    z-index: 2;
+    font-family: "Outfit", sans-serif;
+    visibility: hidden;
+    position: fixed;
+    top: 50%;
+    margin-top: -133px;
+    left: 0;
+    background-color: #1f3641;
+    /* background-color: pink ; */
+    /* color:#F2B137; */
+    width: 100vw;
+    height: 266px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#state-text {
+    font-size: 16px;
+    color: #a8bfc9;
+}
+
+.states-message {
+    /* width: 400px; */
+    /* background-color: #6B8997; */
+    display: flex;
+    column-gap: 24px;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#ttr,
+#restart-ttr {
+    font-size: 40px;
+}
+
+.states-buttons {
+    display: flex;
+    gap: 16px;
+    color: #1a2a33;
+    margin-top: 16px;
+}
+
+#quit {
+    font-size: 16px;
     width: 76px;
-    left: 0px;
-    top: 0px;
-    border-radius: 10px;
+    height: 52px;
     background: #a8bfc9;
     box-shadow: inset 0px -4px 0px #6b8997;
     border-radius: 10px;
 }
-.next_round_button {
-    cursor: pointer;
-    height: 52px;
+
+#next-round {
+    font-size: 16px;
     width: 146px;
-    left: 218px;
-    top: 124px;
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 20px;
-    text-align: center;
-    letter-spacing: 1px;
-    color: #1a2a33;
-    border-radius: 0px;
+    height: 52px;
     background: #f2b137;
     box-shadow: inset 0px -4px 0px #cc8b13;
     border-radius: 10px;
 }
 
-.text {
-    position: absolute;
-    top: 40px;
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 50px;
-    text-align: center;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: #a8bfc9;
+#restart {
+    font-size: 16px;
+    width: 146px;
+    height: 52px;
+    background: #f2b137;
+    box-shadow: inset 0px -4px 0px #cc8b13;
+    border-radius: 10px;
 }
 
-.cancel_button {
-    cursor: pointer;
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
+#cancel {
     font-size: 16px;
-    line-height: 20px;
-    text-align: center;
-    letter-spacing: 1px;
-    color: #1a2a33;
-    width: 139px;
+    width: 146px;
     height: 52px;
     background: #a8bfc9;
     box-shadow: inset 0px -4px 0px #6b8997;
     border-radius: 10px;
 }
 
-.restart_button {
-    cursor: pointer;
-    font-family: "Outfit";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 20px;
-    text-align: center;
-    letter-spacing: 1px;
-    background: #f2b137;
-    box-shadow: inset 0px -4px 0px #cc8b13;
-    border-radius: 10px;
-    width: 151px;
-    height: 52px;
-}
-
-/* pop message end*/
-
-/*VERY SMALL SCREEN*/
-
-@media screen and (min-width: 320px) and (max-width: 320px) {
-    main {
-        position: absolute;
-        left: 15px;
-    }
-
-    .x {
-        background-image: url("./assets/icon-x.svg");
-        background-position: center;
-        background-repeat: no-repeat;
-        width: 10px;
-        height: 10px;
-        background-color: #31c3bd;
-    }
-
-    .circle {
-        background-image: url("./assets/icon-o.svg");
-        background-position: center;
-        background-repeat: no-repeat;
-        width: 10px;
-        height: 10px;
-        background-color: #cc8b13;
-    }
-
-    .player_mask {
-        height: 16px;
-        width: 16px;
-        position: absolute;
-        left: 20%;
-        top: 30%;
-    }
-
-    .next-player {
-        position: absolute;
-        top: 7%;
-        left: 10%;
-        font-size: 16px;
-    }
-
-    .mask {
-        height: 22px;
-        width: 22px;
-    }
-    .game-menu {
-        display: flex;
-        justify-content: space-around;
-        position: absolute;
-        top: 0;
-        width: 280px;
-        height: 0;
-    }
-
-    .game-icons {
-        position: absolute;
-        width: 71.97px;
-        height: 32px;
-        left: -5px;
-        top: 35px;
-    }
-
-    .player-turn {
-        display: flex;
-        position: absolute;
-        left: 115px;
-        top: 24px;
-        width: 70px;
-    }
-    .next-player {
-        top: 13%;
-        left: 3%;
-        text-align: center;
-        font-size: 10px;
-    }
-    .reset-button {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        left: 199px;
-        top: 24px;
-    }
-    #gameboard-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        padding: 20px;
-        position: absolute;
-        top: 90px;
-        padding: 0;
-        left: 35px;
-        gap: 10px;
-    }
-    .game-result {
-        position: absolute;
-        left: 0;
-        top: 350px;
-        margin: 0px;
-        padding: 0px;
-        width: 250px;
-        left: 35px;
-    }
-
-    .grid-box {
-        cursor: pointer;
-        background-color: #1f3641;
-        height: 70px;
-        width: 70px;
-        font-size: 40px;
-        box-shadow: inset 0px -8px 0px #10212a;
-        border-radius: 10px;
-    }
-
-    .info-box {
-        width: 70px;
-        height: 60px;
-    }
-
-    .winner_mask {
-        height: 30px;
-        width: 30px;
-        position: absolute;
-        left: 5%;
-    }
-
-    .round_text {
-        font-family: "Outfit";
-        font-style: normal;
-        font-weight: 700;
-        font-size: 20px;
-        line-height: 30px;
-        letter-spacing: 1.5px;
-        position: absolute;
-        right: 20%;
-        text-transform: uppercase;
+@media only screen and (max-width: 768px) {
+    body {
+        margin-top: 20vh;
     }
 }
 
-/*SMALL SCREENS */
-
-@media screen and (min-width: 360px) and (max-width: 360px) {
-    main {
-        position: absolute;
-        left: -13px;
-    }
-    .mask {
-        height: 22px;
-        width: 22px;
-    }
-    .winner_mask {
-        height: 40px;
-        width: 40px;
-        position: absolute;
-        left: 0;
-    }
-    .game-menu {
-        display: flex;
-        justify-content: space-between;
-        position: absolute;
-        width: 320px;
-        height: 40px;
-        left: 24px;
-        top: 24px;
-    }
-
-    .game-icons {
-        margin-top: 8px;
-        margin-left: 15px;
-    }
-
-    .player-turn {
-        margin-left: -10px;
-    }
-    .next-player {
-        font-size: 14px;
-        text-align: center;
-        width: 96px;
-        height: 40px;
-    }
-    #gameboard-container {
-        display: grid;
-        grid-template-columns: repeat(3, 4fr);
-        padding: 20px;
-        position: absolute;
-        top: 128px;
-        padding: 0;
-        left: 35px;
-        gap: 10px;
-    }
-    .game-result {
-        position: absolute;
-        left: 0;
-        top: 476px;
-        margin: 0px;
-        padding: 0px;
+@media only screen and (max-width: 475px) {
+    .gameplay {
         width: 328px;
+        height: 667px;
+        justify-content: flex-start;
+        margin-top: 20px;
+    }
+    .boxes {
+        gap: clamp(0.5rem, 5vw, 2rem);
+    }
+
+    #ttr,
+    #restart-ttr {
+        font-size: 24px;
+    }
+
+    body {
+        margin-top: 0;
+    }
+
+    .turn {
+        width: 105px;
+    }
+
+    .header {
+        margin-bottom: 64px;
+    }
+
+    .footer {
         height: 64px;
-        left: 35px;
-    }
-
-    .grid-box {
-        cursor: pointer;
-        background-color: #1f3641;
-        width: 96px;
-        height: 96px;
-        font-size: 60px;
-        box-shadow: inset 0px -8px 0px #10212a;
-        border-radius: 10px;
-        text-align: center;
-    }
-
-    .info-box {
-        width: 96px;
-        height: 64px;
+        margin-top: 5vw;
     }
 }
-
-@media screen and (min-width: 375px) and (max-width: 375px) {
-    .mask {
-        height: 22px;
-        width: 22px;
-    }
-    .game-icons {
-        margin-top: 8px;
-        margin-left: 15px;
-    }
-    .player-turn {
-        margin-left: -10px;
-    }
-}
-
-@media screen and (min-width: 390px) and (max-width: 428px) {
-    main {
-        position: absolute;
-        left: 3%;
-        top: 24px;
-    }
-    .player-turn {
-        margin-left: -5px;
-    }
-    .mask {
-        height: 22px;
-        width: 22px;
-    }
-    .game-icons {
-        margin-top: 8px;
-        margin-left: 15px;
-    }
-}
-
-/*MEDIUM  SCREENS  tablet */
-
-@media screen and (min-width: 768px) {
-    main {
-        position: absolute;
-        left: 20%;
-    }
-
-    .game-icons {
-        margin-top: 8px;
-        margin-left: 15px;
-    }
-    .player-turn {
-        width: 140px;
-        height: 52px;
-        position: absolute;
-        left: 185px;
-    }
-    .player_mask {
-        height: 20px;
-        width: 20px;
-        position: absolute;
-        left: 20%;
-        top: 35%;
-    }
-
-    .next-player {
-        position: absolute;
-        top: 7%;
-        left: 20%;
-        font-size: 16px;
-    }
-
-    .reset-button {
-        position: absolute;
-        width: 52px;
-        height: 52px;
-        left: 398px;
-    }
-    .game-menu {
-        width: 457px;
-        height: 52px;
-        top: 180px;
-    }
-    #gameboard-container {
-        top: 250px;
-    }
-    .grid-box {
-        width: 140px;
-        height: 140px;
-        left: 154px;
-        font-size: 95px;
-        font-weight: bolder;
-    }
-
-    .game-result {
-        width: 459px;
-        height: 72px;
-        top: 750px;
-    }
-    .info-box {
-        width: 140px;
-        height: 100px;
-    }
-    .popup_message {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: #1f3641;
-        width: 100%;
-        height: 228px;
-        position: absolute;
-        top: 35%;
-    }
-    .round_text {
-        position: absolute;
-        right: 40%;
-    }
-    .winner_mask {
-        height: 40px;
-        width: 40px;
-        position: absolute;
-        left: 23%;
-    }
-    .tie_message {
-        left: 36%;
-    }
-}
-
-/*MEDIA QUERY FOR SCREENS SIZE WITH MIN-WIDTH 1280 AND MAX 0F 1440*/
-
-@media screen and (min-width: 1280px) {
-    main {
-        left: 35%;
-    }
-    .grid-box {
-        width: 140px;
-        height: 140px;
-    }
-
-    .info-box {
-        width: 140px;
-        height: 72px;
-    }
-    .winner_text {
-        font-family: "Outfit";
-        font-style: normal;
-        font-weight: 700;
-        font-size: 16px;
-        line-height: 30px;
-        letter-spacing: 1.5px;
-    }
-    .round_text {
-        font-size: 40px;
-        left: 35%;
-        text-transform: uppercase;
-    }
-    .winner_mask {
-        left: 30%;
-        height: 64px;
-        width: 64px;
-    }
-    .winner_announcer {
-        position: absolute;
-        height: 20px;
-        left: 25.76%;
-        right: 36.56%;
-        width: 50%;
-        top: calc(50% - 20px / 2 - 78px);
-        font-family: "Outfit";
-        font-style: normal;
-        font-weight: 700;
-        font-size: 16px;
-        line-height: 20px;
-        text-align: center;
-        letter-spacing: 1px;
-        color: #a8bfc9;
-    }
-    .popup_message {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: #1f3641;
-        width: 100%;
-        height: 266px;
-        position: absolute;
-        top: 35%;
-    }
-    .tie_message {
-        left: 38%;
-        font-size: 40px;
-        text-align: center;
-        letter-spacing: 2.5px;
-        text-transform: uppercase;
-    }
-}
-
-/*END*/
-
-/* .bgBlue {
-  background-color: #31c3bd;
-}
-
-.bgYellow {
-  background-color: #f2b137;
-} */
-
-/* .x_hover {
-  background-image: url("./assets/icon-x-outline.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  width: 40px;
-  height: 40px;
-  background-color: #31c3bd;
-}
-.o_hover {
-  background-image: url("./assets/icon-o-outline.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  width: 40px;
-  height: 40px;
-  background-color: #31c3bd;
-} */
