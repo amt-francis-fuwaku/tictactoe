@@ -134,10 +134,10 @@ const WIN_COMBOS = [
 ];
 
 // check win
-const checkWin = (mark) => {
+const checkWin = (playerMark) => {
     return WIN_COMBOS.some((combo) => {
         return combo.every((element) => {
-            let winner = boxArr[element].classList.contains(mark);
+            let winner = boxArr[element].classList.contains(playerMark);
             return winner;
         });
     });

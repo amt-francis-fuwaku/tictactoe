@@ -1,6 +1,6 @@
 // user objects loaded from storage
 let user = JSON.parse(sessionStorage.getItem("user"));
-let opponent = JSON.parse(sessionStorage.getItem("opponent"));
+let cpu = JSON.parse(sessionStorage.getItem("opponent"));
 
 // saves gameData
 let saveData;
@@ -11,7 +11,7 @@ if (user[2] == "playerO") {
     document.getElementById("you").innerHTML = "O (YOU)";
     document.getElementById("you-rg").style.backgroundColor = user[1];
     document.getElementById("cpu").innerHTML = "X (CPU)";
-    document.getElementById("cpu-rg").style.backgroundColor = opponent[1];
+    document.getElementById("cpu-rg").style.backgroundColor = cpu[1];
 }
 
 // turn icon functions
@@ -22,7 +22,7 @@ const changeToUser = () => {
 };
 
 const changeToCpu = () => {
-    turnIcon.src = opponent[3];
+    turnIcon.src = cpu[3];
 };
 
 let userScore = Number(document.getElementById("player-score").innerHTML);
@@ -54,7 +54,7 @@ function saveGameState() {
 }
 
 function restoreGameState() {
-    console.log("called restore Game state");
+    // console.log("called restore Game state");
     saveData = JSON.parse(sessionStorage.getItem("gameData"));
     console.log(saveData);
     turn = saveData.turn;
@@ -62,7 +62,7 @@ function restoreGameState() {
     tiesCount = saveData.tiesCount;
     cpuScore = saveData.cpuScore;
     boxArr.forEach((box, index) => {
-        console.log("inside class restore");
+        // console.log("inside class restore");
         box.classList.add(saveData.arr[index]);
     });
     // update scores
@@ -101,7 +101,7 @@ const getEmpty = () => {
     return boxArr.filter(
         (cell) =>
             !cell.classList.contains(user[2]) &&
-            !cell.classList.contains(opponent[2])
+            !cell.classList.contains(cpu[2])
     );
 };
 
@@ -118,10 +118,10 @@ const WIN_COMBOS = [
 ];
 
 // check win
-const checkWin = (mark) => {
+const checkWin = (playerMark) => {
     return WIN_COMBOS.some((combo) => {
         return combo.every((element) => {
-            let winner = boxArr[element].classList.contains(mark);
+            let winner = boxArr[element].classList.contains(playerMark);
             return winner;
         });
     });
@@ -131,8 +131,7 @@ const checkWin = (mark) => {
 const boardFull = () => {
     return boxArr.every(
         (box) =>
-            box.classList.contains(user[2]) ||
-            box.classList.contains(opponent[2])
+            box.classList.contains(user[2]) || box.classList.contains(cpu[2])
     );
 };
 
@@ -176,7 +175,7 @@ const tiedState = () => {
 const clrScreen = () =>
     boxArr.forEach((item) => {
         item.classList.remove(user[2]);
-        item.classList.remove(opponent[2]);
+        item.classList.remove(cpu[2]);
         document.getElementById("states").style.visibility = "hidden";
         document.getElementById("restart-states").style.visibility = "hidden";
         overlay.style.visibility = "hidden";
@@ -235,12 +234,12 @@ function Players() {
         let play = Math.floor(Math.random() * boxArr.length);
         while (
             boxArr[play].classList.contains(user[2]) ||
-            boxArr[play].classList.contains(opponent[2])
+            boxArr[play].classList.contains(cpu[2])
         ) {
             play = Math.floor(Math.random() * boxArr.length);
         }
-        boxArr[play].classList.add(opponent[2]);
-        if (boardFull() && !checkWin(user[2]) && !checkWin(opponent[2])) {
+        boxArr[play].classList.add(cpu[2]);
+        if (boardFull() && !checkWin(user[2]) && !checkWin(cpu[2])) {
             tiedState();
             return;
         }
@@ -249,8 +248,8 @@ function Players() {
             () => (boxArr[play].style.backgroundImage = "")
         );
 
-        if (checkWin(opponent[2])) {
-            winEffect(opponent);
+        if (checkWin(cpu[2])) {
+            winEffect(cpu);
             cpuScore += 1;
             document.getElementById("cpu-score").innerHTML =
                 cpuScore.toString();
@@ -258,8 +257,8 @@ function Players() {
                 "OH NO, YOU LOST...";
             document.getElementById("ttr").innerHTML = "TAKES THIS ROUND";
             document.getElementById("states-message").style.columnGap = "24px";
-            document.getElementById("win-icon").innerHTML = opponent[0];
-            document.getElementById("ttr").style.color = opponent[1];
+            document.getElementById("win-icon").innerHTML = cpu[0];
+            document.getElementById("ttr").style.color = cpu[1];
             document.getElementById("states").style.visibility = "visible";
             overlay.style.visibility = "visible";
         }
@@ -307,7 +306,7 @@ function remove(evt) {
 
 // USER starts
 function userChoice(evt) {
-    if (!evt.target.classList.contains(opponent[2])) {
+    if (!evt.target.classList.contains(cpu[2])) {
         evt.target.classList.add(user[2]);
         changeToCpu();
     } else {
@@ -318,7 +317,7 @@ function userChoice(evt) {
     if (checkUserWin()) {
         return;
     }
-    if (boardFull() && !checkWin(user[2]) && !checkWin(opponent[2])) {
+    if (boardFull() && !checkWin(user[2]) && !checkWin(cpu[2])) {
         tiedState();
         return;
     }
