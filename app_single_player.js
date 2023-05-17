@@ -359,16 +359,16 @@ const checkUserWin = () => {
 };
 
 // removes hover on clicked box
-function remove(e) {
-    e.target.style.backgroundImage = "";
+function remove(evt) {
+    evt.target.style.backgroundImage = "";
 }
 
 // USER starts
-function userChoice(e) {
+function userChoice(evt) {
     // Check if the clicked target does not have the class of the CPU player
-    if (!e.target.classList.contains(cpu[2])) {
+    if (!evt.target.classList.contains(cpu[2])) {
         // Add the class of the user player to the clicked target
-        e.target.classList.add(user[2]);
+        evt.target.classList.add(user[2]);
 
         // Call the function to change the turn to the CPU player
         changeToCpu();
@@ -378,8 +378,8 @@ function userChoice(e) {
     }
 
     // Add event listeners and remove event listener on the clicked target
-    e.target.addEventListener("mouseenter", remove);
-    e.target.removeEventListener("click", userChoice);
+    evt.target.addEventListener("mouseenter", remove);
+    evt.target.removeEventListener("click", userChoice);
 
     // Check if the user has won the game
     if (checkUserWin()) {
