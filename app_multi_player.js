@@ -128,7 +128,7 @@ const savedUI = () => {
 };
 // BROWSER END
 
-// get empty boxes
+// get boxes that does not already contain a mark then apply. so that hover can be applied
 const getEmpty = () => {
     return boxArr.filter(
         (cell) =>
@@ -254,11 +254,13 @@ const winEffect = (caller) => {
     });
 };
 
-// checks if box is empty
+// checks if box  empty
 const isValid = (box) => {
+    //return false if box already contains a mark || prevent the player from adding a mark to a box that already has a mark
     if (box.classList.contains(p1[2]) || box.classList.contains(p2[2])) {
         return false;
     }
+    // allow player to place mask in an empty cell
     return true;
 };
 
@@ -304,12 +306,12 @@ const changePlayer = () => {
 };
 
 // player actions
-function action(evt) {
-    if (isValid(evt.target) && !boardFull()) {
-        evt.target.classList.add(currentPlayer[2]);
-        evt.target.addEventListener(
+function action(e) {
+    if (isValid(e.target) && !boardFull()) {
+        e.target.classList.add(currentPlayer[2]);
+        e.target.addEventListener(
             "mouseenter",
-            () => (evt.target.style.backgroundImage = "")
+            () => (e.target.style.backgroundImage = "")
         );
         if (checkWin(currentPlayer[2])) {
             winEffect(currentPlayer);

@@ -118,7 +118,7 @@ const savedUI = () => {
 
 // BROWSER END
 
-//get empty boxes
+// get boxes that does not already contain a mark then apply. so that hover can be applied
 const getEmpty = () => {
     return boxArr.filter(
         (cell) =>
@@ -359,16 +359,16 @@ const checkUserWin = () => {
 };
 
 // removes hover on clicked box
-function remove(evt) {
-    evt.target.style.backgroundImage = "";
+function remove(e) {
+    e.target.style.backgroundImage = "";
 }
 
 // USER starts
-function userChoice(evt) {
+function userChoice(e) {
     // Check if the clicked target does not have the class of the CPU player
-    if (!evt.target.classList.contains(cpu[2])) {
+    if (!e.target.classList.contains(cpu[2])) {
         // Add the class of the user player to the clicked target
-        evt.target.classList.add(user[2]);
+        e.target.classList.add(user[2]);
 
         // Call the function to change the turn to the CPU player
         changeToCpu();
@@ -378,8 +378,8 @@ function userChoice(evt) {
     }
 
     // Add event listeners and remove event listener on the clicked target
-    evt.target.addEventListener("mouseenter", remove);
-    evt.target.removeEventListener("click", userChoice);
+    e.target.addEventListener("mouseenter", remove);
+    e.target.removeEventListener("click", userChoice);
 
     // Check if the user has won the game
     if (checkUserWin()) {
