@@ -2,9 +2,9 @@
 let user = JSON.parse(sessionStorage.getItem("user"));
 let cpu = JSON.parse(sessionStorage.getItem("opponent"));
 
-// saves gameData
-let saveData;
-let arr;
+let saveData; // saves gameData
+//
+let classArray; // an array for saving the games ui after refresh
 
 // set score area text and color
 if (user[2] == "playerO") {
@@ -47,30 +47,34 @@ function saveGameState() {
         turn,
         tiesCount,
         cpuScore,
-        arr,
+        classArray,
     };
     sessionStorage.setItem("gameData", JSON.stringify(saveData));
-    console.log("saved game state");
 }
 
+//restore game state and ui
 function restoreGameState() {
-    // console.log("called restore Game state");
+    // Retrieve the saved game data from sessionStorage and parse it as JSON
     saveData = JSON.parse(sessionStorage.getItem("gameData"));
-    console.log(saveData);
+
+    // Restore the values of turn, userScore, tiesCount, and cpuScore from the saveData object
     turn = saveData.turn;
     userScore = saveData.userScore;
     tiesCount = saveData.tiesCount;
     cpuScore = saveData.cpuScore;
+
+    // Iterate over each box in `boxArr`
     boxArr.forEach((box, index) => {
-        // console.log("inside class restore");
-        box.classList.add(saveData.arr[index]);
+        // Add the corresponding class from saveData.classArray to each box
+        box.classList.add(saveData.classArray[index]);
     });
-    // update scores
+
+    // Update the displayed scores in the UI
     document.getElementById("cpu-score").innerHTML = cpuScore.toString();
     document.getElementById("player-score").innerHTML = userScore.toString();
     document.getElementById("ties-count").innerHTML = tiesCount.toString();
 
-    // solve pc playing on every reload
+    // Solve pc playing on every reload
     if (turn) {
         gameplay();
     } else {
@@ -82,18 +86,31 @@ function restoreGameState() {
 
 // save data for class list
 const savedUI = () => {
-    arr = [];
+    // Create an empty array called `classArray`
+    classArray = [];
+
+    // Iterate over each box in `boxArr`
     boxArr.forEach((box) => {
+        // Check if the box contains the class "playerX"
         if (box.classList.contains("playerX")) {
-            arr.push("playerX");
-        } else if (box.classList.contains("playerO")) {
-            arr.push("playerO");
-        } else {
-            arr.push("a");
+            // If it does, push the string "playerX" into `classArray`
+            classArray.push("playerX");
         }
-        return arr;
+        // Check if the box contains the class "playerO"
+        else if (box.classList.contains("playerO")) {
+            // If it does, push the string "playerO" into `classArray`
+            classArray.push("playerO");
+        }
+        // If the box doesn't contain either "playerX" or "playerO"
+        else {
+            // Push the string "a" into `classArray`
+            classArray.push("a");
+        }
+        // Return the `classArray` array (this return statement is actually not necessary)
+        return classArray;
     });
 };
+
 // BROWSER END
 
 //get empty boxes
@@ -343,24 +360,38 @@ function remove(evt) {
 
 // USER starts
 function userChoice(evt) {
+    // Check if the clicked target does not have the class of the CPU player
     if (!evt.target.classList.contains(cpu[2])) {
+        // Add the class of the user player to the clicked target
         evt.target.classList.add(user[2]);
+
+        // Call the function to change the turn to the CPU player
         changeToCpu();
     } else {
+        // If the clicked target already has the class of the CPU player, return and do nothing
         return;
     }
+
+    // Add event listeners and remove event listener on the clicked target
     evt.target.addEventListener("mouseenter", remove);
     evt.target.removeEventListener("click", userChoice);
+
+    // Check if the user has won the game
     if (checkUserWin()) {
         return;
     }
+
+    // Check if the board is full and no player has won
     if (boardFull() && !checkWin(user[2]) && !checkWin(cpu[2])) {
+        // Call the function to handle the tied state
         tiedState();
         return;
     }
-    // run saveState and log data
+
+    // Save the game state and log the data
     saveGameState();
-    // console.log(saveData)
+
+    // Call the CPU's choice asynchronously, and then change the turn back to the user
     cpuChoice().then(() => changeToUser);
 }
 
