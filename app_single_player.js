@@ -3,7 +3,6 @@ let user = JSON.parse(sessionStorage.getItem("user"));
 let cpu = JSON.parse(sessionStorage.getItem("opponent"));
 
 let saveData; // saves gameData
-//
 let classArray; // an array for saving the games ui after refresh
 
 // set score area text and color
@@ -41,7 +40,10 @@ let turn = user[2] == "playerX";
 
 // BROWSER RELOAD SAVE FUNCTIONALITY START
 function saveGameState() {
+    // Call the `savedUI` function to save the UI state in the `classArray` variable
     savedUI();
+
+    // Create an object called `saveData` with properties for userScore, turn, tiesCount, cpuScore, and classArray
     saveData = {
         userScore,
         turn,
@@ -49,6 +51,8 @@ function saveGameState() {
         cpuScore,
         classArray,
     };
+
+    // Convert the `saveData` object to a JSON string and store it in the "gameData" key of the sessionStorage object
     sessionStorage.setItem("gameData", JSON.stringify(saveData));
 }
 
