@@ -174,30 +174,47 @@ const tiedState = () => {
 //clears screen
 const clrScreen = () =>
     boxArr.forEach((item) => {
+        // Remove the classes belonging to the user and the CPU from each item
         item.classList.remove(user[2]);
         item.classList.remove(cpu[2]);
+
+        // Hide the states and restart states elements
         document.getElementById("states").style.visibility = "hidden";
         document.getElementById("restart-states").style.visibility = "hidden";
+
+        // Hide the overlay
         overlay.style.visibility = "hidden";
+
+        // Add event listener to apply hover effect on mouseenter
         item.addEventListener("mouseenter", (user) => hover(item));
+
+        // Reset the background color and background image of the item
         item.style.backgroundColor = "#1F3641";
         item.style.backgroundImage = "";
     });
 
 // setting hovers
+
 const hover = (item) => {
+    // Check if the caller's class is "playerO"
     if (user[2] == "playerO") {
+        // If it is, set the background image of the item to "url(./assets/icon-o-outline.svg)"
         item.style.backgroundImage = "url(./assets/icon-o-outline.svg)";
     } else {
+        // Otherwise, set the background image of the item to "url(./assets/icon-x-outline.svg)"
         item.style.backgroundImage = "url(./assets/icon-x-outline.svg)";
     }
+
+    // Set the background repeat and position of the item
     item.style.backgroundRepeat = "no-repeat";
     item.style.backgroundPosition = "50%";
 };
 
 const setHover = () => {
+    // Get all empty cells
     getEmpty().forEach((cell) => {
-        cell.addEventListener("mouseenter", (user) => hover(cell));
+        // Add event listeners to each cell
+        cell.addEventListener("mouseenter", () => hover(cell));
         cell.addEventListener(
             "mouseleave",
             () => (cell.style.backgroundImage = "")
