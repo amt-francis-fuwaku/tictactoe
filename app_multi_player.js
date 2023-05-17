@@ -5,7 +5,7 @@ let p2 = JSON.parse(sessionStorage.getItem("opponent"));
 // saves gameData
 let saveData;
 // saves classList for saveData
-let arr;
+let classArray;
 
 //set current player based on selected starting icon
 let currentPlayer;
@@ -49,30 +49,37 @@ let turn = p1[2] == "playerX";
 
 // BROWSER RELOAD SAVE FUNCTIONALITY START
 function saveGameState() {
+    // Call the `savedUI` function to save the UI state in the `classArray` variable
     savedUI();
+
+    // Create an object called `saveData` with properties for userScore, turn, tiesCount, cpuScore, and classArray
     saveData = {
         p1Score,
         turn,
         tiesCount,
         p2Score,
         currentPlayer,
-        arr,
+        classArray,
     };
+
+    // Convert the `saveData` object to a JSON string and store it in the "gameData" key of the sessionStorage object
     sessionStorage.setItem("gameData", JSON.stringify(saveData));
-    // console.log('saved game state')
 }
 
 function restoreGameState() {
-    // console.log('called restore Game state')
+    // Retrieve the saved game data from sessionStorage and parse it as JSON
     saveData = JSON.parse(sessionStorage.getItem("gameData"));
-    console.log(saveData);
+
     turn = saveData.turn;
     currentPlayer = saveData.currentPlayer;
     p1Score = saveData.p1Score;
     tiesCount = saveData.tiesCount;
     p2Score = saveData.p2Score;
+
+    // Iterate over each box in `boxArr`
     boxArr.forEach((box, index) => {
-        box.classList.add(saveData.arr[index]);
+        // Add the corresponding class from saveData.classArray to each box
+        box.classList.add(saveData.classArray[index]);
     });
 
     // update scores
@@ -84,7 +91,6 @@ function restoreGameState() {
 
     //solve turn issues
     if (turn == false && currentPlayer[2] == p1[2]) {
-        console.log("checking conditions");
         turn = true;
         gameplay();
         turn = !turn;
@@ -99,16 +105,25 @@ function restoreGameState() {
 }
 // save data for class list
 const savedUI = () => {
-    arr = [];
+    // Create an empty array called `classArray`
+    classArray = [];
+
+    // Iterate over each box in `boxArr`
     boxArr.forEach((box) => {
+        // Check if the box contains the class "playerX"
         if (box.classList.contains("playerX")) {
-            arr.push("playerX");
-        } else if (box.classList.contains("playerO")) {
-            arr.push("playerO");
-        } else {
-            arr.push("a");
+            // If it does, push the string "playerX" into `classArray`
+            classArray.push("playerX");
+        } // Check if the box contains the class "playerO"
+        else if (box.classList.contains("playerO")) {
+            // If it does, push the string "playerO" into `classArray`
+            classArray.push("playerO");
+        } // If the box doesn't contain either "playerX" or "playerO"
+        else {
+            // Push the string "a" into `classArray`
+            classArray.push("*");
         }
-        return arr;
+        return classArray;
     });
 };
 // BROWSER END

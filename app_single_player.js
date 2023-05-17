@@ -27,6 +27,7 @@ const changeToCpu = () => {
 let userScore = Number(document.getElementById("player-score").innerHTML);
 let tiesCount = Number(document.getElementById("ties-count").innerHTML);
 let cpuScore = Number(document.getElementById("cpu-score").innerHTML);
+
 const restartBtn = document.getElementById("restart-icon");
 const confirmRestart = document.getElementById("restart");
 const overlay = document.getElementById("overlay");
@@ -108,7 +109,7 @@ const savedUI = () => {
         // If the box doesn't contain either "playerX" or "playerO"
         else {
             // Push the string "a" into `classArray`
-            classArray.push("a");
+            classArray.push("*");
         }
         // Return the `classArray` array (this return statement is actually not necessary)
         return classArray;
