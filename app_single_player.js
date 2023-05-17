@@ -208,7 +208,7 @@ const clrScreen = () =>
         overlay.style.visibility = "hidden";
 
         // Add event listener to apply hover effect on mouseenter
-        item.addEventListener("mouseenter", (user) => hover(item));
+        item.addEventListener("mouseenter", () => hover(item));
 
         // Reset the background color and background image of the item
         item.style.backgroundColor = "#1F3641";
