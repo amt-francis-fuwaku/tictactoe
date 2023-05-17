@@ -231,40 +231,53 @@ const player = Players();
 //return computer choice
 function Players() {
     const machine = () => {
+        // Generate a random index within the range of `boxArr` length
         let play = Math.floor(Math.random() * boxArr.length);
+
+        // Check if the box at the generated index contains a class belonging to either the user or the CPU
+        // If so, generate a new random index until a box without those classes is found
         while (
             boxArr[play].classList.contains(user[2]) ||
             boxArr[play].classList.contains(cpu[2])
         ) {
             play = Math.floor(Math.random() * boxArr.length);
         }
+
+        // Add the CPU class to the box at the chosen index
         boxArr[play].classList.add(cpu[2]);
+
+        // Check if the board is full and there is no winner for both the user and the CPU
         if (boardFull() && !checkWin(user[2]) && !checkWin(cpu[2])) {
-            tiedState();
-            return;
+            tiedState(); // Display tied state
+            return; // Exit the function
         }
+
+        // Add an event listener to remove background image when the mouse enters the box
         boxArr[play].addEventListener(
             "mouseenter",
             () => (boxArr[play].style.backgroundImage = "")
         );
 
+        // Check if the CPU wins
         if (checkWin(cpu[2])) {
-            winEffect(cpu);
-            cpuScore += 1;
+            winEffect(cpu); // Apply win effect
+            cpuScore += 1; // Increment CPU score
             document.getElementById("cpu-score").innerHTML =
-                cpuScore.toString();
+                cpuScore.toString(); // Update CPU score display
             document.getElementById("state-text").innerHTML =
-                "OH NO, YOU LOST...";
-            document.getElementById("ttr").innerHTML = "TAKES THIS ROUND";
-            document.getElementById("states-message").style.columnGap = "24px";
-            document.getElementById("win-icon").innerHTML = cpu[0];
-            document.getElementById("ttr").style.color = cpu[1];
-            document.getElementById("states").style.visibility = "visible";
-            overlay.style.visibility = "visible";
+                "OH NO, YOU LOST..."; // Update state text
+            document.getElementById("ttr").innerHTML = "TAKES THIS ROUND"; // Update round text
+            document.getElementById("states-message").style.columnGap = "24px"; // Adjust column gap
+            document.getElementById("win-icon").innerHTML = cpu[0]; // Update win icon
+            document.getElementById("ttr").style.color = cpu[1]; // Update round text color
+            document.getElementById("states").style.visibility = "visible"; // Show states
+            overlay.style.visibility = "visible"; // Show overlay
         }
-        saveGameState();
+
+        saveGameState(); // Save the game state
     };
-    return { machine };
+
+    return { machine }; // Return an object with the `machine` method
 }
 
 function cpuChoice() {
