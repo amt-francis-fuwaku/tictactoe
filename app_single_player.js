@@ -424,14 +424,23 @@ nextRound.addEventListener("click", () => {
 
 // game play
 const gameplay = () => {
+    // Call the `setHover` function to set hover effects on game boxes
     setHover();
 
+    // Check the value of `turn` to determine the current player's turn
     if (turn) {
+        // If it is the user's turn, call the `changeToUser` function to indicate the user's turn
         changeToUser();
+
+        // Call the `play.addEvt` function to add event listeners for the user's moves
         play.addEvt();
     } else {
+        // If it is the CPU's turn
         cpuChoice().then(() => {
+            // Call the `changeToUser` function to indicate the user's turn
             changeToUser();
+
+            // Call the `play.addEvt` function to add event listeners for the user's moves
             play.addEvt();
         });
     }
