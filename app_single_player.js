@@ -27,10 +27,10 @@ const changeToCpu = () => {
 let userScore = Number(document.getElementById("player-score").innerHTML);
 let tiesCount = Number(document.getElementById("ties-count").innerHTML);
 let cpuScore = Number(document.getElementById("cpu-score").innerHTML);
-let restartBtn = document.getElementById("restart-icon");
-let confirmRestart = document.getElementById("restart");
-let overlay = document.getElementById("overlay");
-let cancelBtn = document.getElementById("cancel");
+const restartBtn = document.getElementById("restart-icon");
+const confirmRestart = document.getElementById("restart");
+const overlay = document.getElementById("overlay");
+const cancelBtn = document.getElementById("cancel");
 const boxes = document.querySelectorAll(".box");
 let boxArr = Array.from(boxes);
 const nextRound = document.getElementById("next-round");
