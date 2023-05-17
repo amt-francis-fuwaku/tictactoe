@@ -340,9 +340,10 @@ nextRound.addEventListener("click", () => {
 
 // game play
 const gameplay = () => {
-    console.log("gameplay called");
+    // Call the `setHover` function to set hover effects on game boxes
     setHover();
 
+    // Check the value of `turn` to determine the current player's turn
     if (turn) {
         currentPlayer = p1;
         turnIcon.src = p1[3];
