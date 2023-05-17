@@ -207,18 +207,25 @@ const setHover = () => {
 
 // create highlight on win icons
 const winEffect = (caller) => {
+    // Create an empty array to store the IDs of the boxes that contain the caller's class
     const winArr = [];
+
+    // Iterate over each box in `boxArr`
     boxArr.forEach((box) => {
+        // Check if the box contains the class specified by `caller`
         if (box.classList.contains(caller[2])) {
+            // If it does, add the ID of the box to `winArr`
             winArr.push(Number(box.id));
         }
     });
+
+    // Iterate over each combination in `WIN_COMBOS`
     WIN_COMBOS.forEach((combo) => {
+        // Check if every element in the combination exists in `winArr`
         if (combo.every((e) => winArr.includes(e))) {
+            // If all elements exist in `winArr`, apply the highlight effect to each box in the combination
             combo.forEach((item) => {
-                // console.log(item)
                 boxArr[item].style.backgroundColor = caller[1];
-                // console.log()
                 boxArr[item].style.backgroundImage = caller[4];
             });
         }
