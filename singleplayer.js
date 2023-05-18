@@ -336,7 +336,7 @@ function cpuChoice() {
         setTimeout(() => {
             cpuPlayer.machine();
             resolve();
-        }, 900);
+        }, 300);
     });
 }
 // CPU ends
@@ -386,7 +386,6 @@ function userChoice(evt) {
     }
     // run saveState and log data
     saveGameState();
-    // console.log(saveData)
     cpuChoice().then(() => changeToUser);
 }
 
