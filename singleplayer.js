@@ -305,7 +305,7 @@ function Players() {
                     !boxArr[i].classList.contains(cpu[2])
                 ) {
                     boxArr[i].classList.add(cpu[2]);
-                    const score = minimax(depth + 1, true);
+                    const score = minimax(depth + 1, false);
                     boxArr[i].classList.remove(cpu[2]);
                     bestScore = Math.max(score, bestScore);
                 }
