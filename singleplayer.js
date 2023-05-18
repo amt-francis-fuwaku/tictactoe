@@ -231,20 +231,16 @@ const winEffect = (caller) => {
 };
 
 // CPU Starts
-const player = Players();
+const cpuPlayer = Players();
 
 //return computer choice
 function Players() {
     const machine = () => {
-        let play = Math.floor(Math.random() * boxArr.length);
-        while (
-            boxArr[play].classList.contains(user[2]) ||
-            boxArr[play].classList.contains(cpu[2])
-        ) {
-            play = Math.floor(Math.random() * boxArr.length);
-        }
+        const bestMove = getBestMove();
+        const play = bestMove.index;
         boxArr[play].classList.add(cpu[2]);
         changeToUser();
+        //checks for a tie
         if (boardFull() && !checkWin(user[2]) && !checkWin(cpu[2])) {
             tiedState();
             return;
@@ -253,7 +249,6 @@ function Players() {
             "mouseenter",
             () => (boxArr[play].style.backgroundImage = "")
         );
-
         if (checkWin(cpu[2])) {
             winEffect(cpu);
             cpuScore += 1;
@@ -268,17 +263,119 @@ function Players() {
             document.getElementById("states").style.visibility = "visible";
             overlay.style.visibility = "visible";
         }
+
         saveGameState();
     };
+    const getBestMove = () => {
+        let bestScore = -Infinity;
+        let bestMove;
+
+        for (let i = 0; i < boxArr.length; i++) {
+            if (
+                !boxArr[i].classList.contains(user[2]) &&
+                !boxArr[i].classList.contains(cpu[2])
+            ) {
+                boxArr[i].classList.add(cpu[2]);
+                const score = minimax(0, false);
+                boxArr[i].classList.remove(cpu[2]);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = i;
+                }
+            }
+        }
+
+        return { index: bestMove, score: bestScore };
+    };
+    const minimax = (depth, isMaximizing) => {
+        if (checkWin(user[2])) {
+            return -1;
+        } else if (checkWin(cpu[2])) {
+            return 1;
+        } else if (boardFull()) {
+            return 0;
+        }
+
+        if (isMaximizing) {
+            let bestScore = -Infinity;
+            for (let i = 0; i < boxArr.length; i++) {
+                if (
+                    !boxArr[i].classList.contains(user[2]) &&
+                    !boxArr[i].classList.contains(cpu[2])
+                ) {
+                    boxArr[i].classList.add(cpu[2]);
+                    const score = minimax(depth + 1, false);
+                    boxArr[i].classList.remove(cpu[2]);
+                    bestScore = Math.max(score, bestScore);
+                }
+            }
+            return bestScore;
+        } else {
+            let bestScore = Infinity;
+            for (let i = 0; i < boxArr.length; i++) {
+                if (
+                    !boxArr[i].classList.contains(user[2]) &&
+                    !boxArr[i].classList.contains(cpu[2])
+                ) {
+                    boxArr[i].classList.add(user[2]);
+                    const score = minimax(depth + 1, true);
+                    boxArr[i].classList.remove(user[2]);
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+            return bestScore;
+        }
+    };
+
     return { machine };
 }
+
+// function Players() {
+//     const machine = () => {
+//         let play = Math.floor(Math.random() * boxArr.length);
+//         while (
+//             boxArr[play].classList.contains(user[2]) ||
+//             boxArr[play].classList.contains(cpu[2])
+//         ) {
+//             play = Math.floor(Math.random() * boxArr.length);
+//         }
+//         boxArr[play].classList.add(cpu[2]);
+//         changeToUser();
+//         if (boardFull() && !checkWin(user[2]) && !checkWin(cpu[2])) {
+//             tiedState();
+//             return;
+//         }
+//         boxArr[play].addEventListener(
+//             "mouseenter",
+//             () => (boxArr[play].style.backgroundImage = "")
+//         );
+//
+// if (checkWin(cpu[2])) {
+//     winEffect(cpu);
+//     cpuScore += 1;
+//     document.getElementById("cpu-score").innerHTML =
+//         cpuScore.toString();
+//     document.getElementById("state-text").innerHTML =
+//         "OH NO, YOU LOST...";
+//     document.getElementById("ttr").innerHTML = "TAKES THIS ROUND";
+//     document.getElementById("states-message").style.columnGap = "24px";
+//     document.getElementById("win-icon").innerHTML = cpu[0];
+//     document.getElementById("ttr").style.color = cpu[1];
+//     document.getElementById("states").style.visibility = "visible";
+//     overlay.style.visibility = "visible";
+// }
+//         saveGameState();
+//     };
+//     return { machine };
+// }
 
 function cpuChoice() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            player.machine();
+            cpuPlayer.machine();
             resolve();
-        }, 900);
+        }, 100);
     });
 }
 // CPU ends
