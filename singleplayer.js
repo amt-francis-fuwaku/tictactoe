@@ -269,7 +269,6 @@ function Players() {
             overlay.style.visibility = "visible";
         }
         saveGameState();
-        // console.log(saveData)
     };
     return { machine };
 }
