@@ -305,7 +305,7 @@ function Players() {
                     !boxArr[i].classList.contains(cpu[2])
                 ) {
                     boxArr[i].classList.add(cpu[2]);
-                    const score = minimax(depth + 1, false);
+                    const score = minimax(depth + 1, true);
                     boxArr[i].classList.remove(cpu[2]);
                     bestScore = Math.max(score, bestScore);
                 }
@@ -331,55 +331,15 @@ function Players() {
     return { machine };
 }
 
-// function Players() {
-//     const machine = () => {
-//         let play = Math.floor(Math.random() * boxArr.length);
-//         while (
-//             boxArr[play].classList.contains(user[2]) ||
-//             boxArr[play].classList.contains(cpu[2])
-//         ) {
-//             play = Math.floor(Math.random() * boxArr.length);
-//         }
-//         boxArr[play].classList.add(cpu[2]);
-//         changeToUser();
-//         if (boardFull() && !checkWin(user[2]) && !checkWin(cpu[2])) {
-//             tiedState();
-//             return;
-//         }
-//         boxArr[play].addEventListener(
-//             "mouseenter",
-//             () => (boxArr[play].style.backgroundImage = "")
-//         );
-//
-// if (checkWin(cpu[2])) {
-//     winEffect(cpu);
-//     cpuScore += 1;
-//     document.getElementById("cpu-score").innerHTML =
-//         cpuScore.toString();
-//     document.getElementById("state-text").innerHTML =
-//         "OH NO, YOU LOST...";
-//     document.getElementById("ttr").innerHTML = "TAKES THIS ROUND";
-//     document.getElementById("states-message").style.columnGap = "24px";
-//     document.getElementById("win-icon").innerHTML = cpu[0];
-//     document.getElementById("ttr").style.color = cpu[1];
-//     document.getElementById("states").style.visibility = "visible";
-//     overlay.style.visibility = "visible";
-// }
-//         saveGameState();
-//     };
-//     return { machine };
-// }
-
 function cpuChoice() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             cpuPlayer.machine();
             resolve();
-        }, 100);
+        }, 900);
     });
 }
 // CPU ends
-
 // checks if user has won
 const checkUserWin = () => {
     if (checkWin(user[2])) {
