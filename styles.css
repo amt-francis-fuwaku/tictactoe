@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    font-family: "Outfit", sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 16px;
     margin: 0;
     padding: 0;
@@ -10,7 +10,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #1a2a33;
+    background-color: #1A2A33;
     width: 100vw;
     height: 90vh;
 }
@@ -23,17 +23,20 @@ body {
     display: flex;
     width: 460px;
     height: 471px;
+
+    /* margin-top: 100px; */
 }
 
-p {
-    color: #a8bfc9;
+p { 
+    color: #A8BFC9; 
     text-align: center;
-    align-self: center;
+    align-self: center; 
+    
 }
 
 .rectangle {
-    background-color: #1f3641;
-    box-shadow: 0px -8px 0px 0px #10212a inset;
+    background-color:  #1F3641;
+    box-shadow: 0px -8px 0px 0px #10212A inset;
     border-radius: 15px;
     margin-top: 10px;
     width: 100%;
@@ -49,22 +52,29 @@ p {
     font-weight: 700;
     letter-spacing: 1px;
     text-align: center;
+    
 }
 
-#remember {
+#remember{
     text-align: center;
-    opacity: 50%;
-    fill: Solid #a8bfc9;
+    Opacity: 50%;
+    Fill: Solid #A8BFC9;
+    
 }
+
 
 .toggle {
-    background-color: #1a2a33;
+    /* padding-left: 90px; */
+    /* padding-right: 2px; */
+    background-color: #1A2A33;
     width: 90%;
     height: 72px;
     border-radius: 10px;
+    /* margin-left: 20px; */
+    /* ernest code */
     display: flex;
     justify-content: space-evenly;
-    align-items: center;
+    align-items: center;   
 }
 
 .x-img {
@@ -78,7 +88,7 @@ p {
 
 .o-img {
     display: flex;
-    background-color: #a8bfc9;
+    background-color: #A8BFC9;
     width: 198px;
     height: 54px;
     border-radius: 10px;
@@ -86,19 +96,17 @@ p {
     align-items: center;
 }
 
-#x {
+#x{
     height: 32px;
-    filter: invert(79%) sepia(32%) saturate(145%) hue-rotate(153deg)
-        brightness(90%) contrast(89%);
+    filter: invert(79%) sepia(32%) saturate(145%) hue-rotate(153deg) brightness(90%) contrast(89%);
 }
 
-#o {
+#o{
     height: 32px;
-    filter: invert(12%) sepia(12%) saturate(1823%) hue-rotate(157deg)
-        brightness(96%) contrast(90%);
+    filter: invert(12%) sepia(12%) saturate(1823%) hue-rotate(157deg) brightness(96%) contrast(90%);
 }
 
-.new {
+.new{
     padding-top: 20px;
     display: flex;
     flex-direction: column;
@@ -108,35 +116,39 @@ p {
 }
 
 #cpu {
-    border: none;
     font-size: 20px;
     font-weight: 700;
     line-height: 25px;
     letter-spacing: 1.25px;
     text-align: center;
+    /* margin: 20px; */
+    /* padding-left: 100px; */
     height: 67px;
     width: 460px;
     border-radius: 15px;
-    color: #1a2a33;
-    background-color: #f2b137;
-    offset: 0px, -8px #cc8b13;
-    box-shadow: 0px -8px 0px 0px #cc8b13 inset;
+    color: #1A2A33;
+    background-color: #F2B137;
+    Offset: 0px, -8px #CC8B13;
+    box-shadow: 0px -8px 0px 0px #CC8B13 inset;
+
+
 }
 
-#player {
+#player { 
     font-size: 20px;
     font-weight: 700;
     line-height: 25px;
     letter-spacing: 1.25px;
     text-align: center;
-    border: none;
+    /* margin: 20px; */
     height: 67px;
     width: 460px;
     border-radius: 15px;
-    color: #1a2a33;
-    background-color: #31c3bd;
-    offset: 0px, -8px #118c87;
-    box-shadow: 0px -8px 0px 0px #118c87 inset;
+    color: #1A2A33;
+    background-color: #31C3BD;
+    Offset: 0px, -8px #118C87;
+    box-shadow: 0px -8px 0px 0px #118C87 inset;
+    
 }
 /* Hover  start*/
 .x-img:hover {
@@ -160,8 +172,8 @@ p {
         height: 429px;
     }
 
-    #cpu,
-    #player {
+    #cpu, #player {
         width: 327px;
     }
+
 }
