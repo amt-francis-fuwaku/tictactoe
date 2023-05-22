@@ -324,6 +324,7 @@ function Players() {
                     bestScore = Math.min(score, bestScore);
                 }
             }
+
             return bestScore;
         }
     };
@@ -336,10 +337,15 @@ function cpuChoice() {
         setTimeout(() => {
             cpuPlayer.machine();
             resolve();
-        }, 300);
+        }, 600);
     });
 }
 // CPU ends
+//
+// async function cpuChoice() {
+//     await new Promise((resolve) => setTimeout(resolve, 0.1));
+//     cpuPlayer.machine();
+// }
 // checks if user has won
 const checkUserWin = () => {
     if (checkWin(user[2])) {
